@@ -9,22 +9,22 @@ pyFormUI provide the most easy way to show a Form Dialog for python,which is bas
 
 Installation
 ------------
-1.install wxpython
+####1.install wxpython
 ```bash
   sudo apt-get install python-wxtools
 ```
-2.Installation pyFormUI from the source package:
+####2.Installation pyFormUI from the source package:
 ```bash
 python setup.py install
 ```
 
 Simple Example:
---------
+------------
 Please Find the code of this Example in files Demo/SimpleDemo.py and Demo/SimpleDemo.xml
 
 <img src="https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/SimpleDemo.png">
 
-1.Create GUI by xml
+####1.Create GUI by xml
 ```xml
 <?xml version="1.0"?>
 <form title="Demo GUI" width='500' height='100'>
@@ -37,7 +37,7 @@ Please Find the code of this Example in files Demo/SimpleDemo.py and Demo/Simple
    </line>
 </form>
 ```
-2.Show GUI by xml layout
+####2.Show GUI by xml layout
 ```python
 from FormUI import *
 builder = Builder()
@@ -46,7 +46,7 @@ formUI = FormUI(builder)
 formUI.show()
 ```
 
-3.Add handler for button or other controls
+####3.Add handler for button or other controls
 ```python
 def OkButtonHandler(windowHandler, para):
     resultList = para['result_list']
@@ -56,16 +56,17 @@ builder.setCtrlHandler('id_ok', OkButtonHandler)
 ```
 
 More Demos
---------
+------------
 Find more Demos in Demo Folder.
-1.Demo.py
+
+####1.Demo.py
 ```bash
   python Demo.py
 ```
 
   this demo show the basic control of pyFormUI
 
-2.FindGui.py
+####2.FindGui.py
 ```bash
   python FindGui.py
 ```
