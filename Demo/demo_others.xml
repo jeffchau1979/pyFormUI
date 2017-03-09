@@ -1,0 +1,34 @@
+<?xml version="1.0"?> 
+<form>
+<notebook  id="id_notebook">
+    <panel name='File'>
+        <line>
+            <file id='id_file' title='File:' choices="/home;/work"  value="" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"/>
+        </line>
+        <line>
+            <folder id='id_folder' title='Select Folder:' value="/home"/>
+        </line>
+        <line>
+            <multi_files id='id_multi_files' title='File:' choices="/home;/work"
+                  value="/home" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"
+                  height="100"
+            />
+        </line>
+    </panel>
+    <panel name='DateTime'>
+        <line>
+            <date id='id_date' title='Select Date:' value="2017-02-01"/>
+        </line>
+        <line>
+            <date id='id_time' title='Time:' value="10:01:01"/>
+        </line>
+        <line>
+            <datetime id='id_datetime' title='DateTime:' value="2017-02-01 10:01:01"/>
+        </line>
+    </panel>
+</notebook>
+<line align="right">
+    <button id='id_cancel' title='Cancel' width="100"/>
+    <button id='id_ok' title='Ok' width="100"/>
+</line>
+</form>

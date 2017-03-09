@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<form title="Demo GUI" width='500' height='100'>
+   <line>
+        <static title="Text:" width='50' />
+        <text id='id_text'/>
+   </line>
+   <line align="right">
+        <button id='id_ok' title='Ok'/>
+   </line>
+</form>

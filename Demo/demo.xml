@@ -1,0 +1,67 @@
+<?xml version="1.0"?> 
+<form title="Demo GUI" width='500' height='600'>
+<menubar>
+	<menu title='File'>
+        <menu title='SubMenu'>
+		    <menu title='MenuItem' id='id_menu' enable="false"/>
+        </menu>
+	</menu>
+</menubar>
+<notebook>
+    <panel name='CommonCtrol'>
+        <line>
+            <static_line align='center' title="Title"/>
+        </line>
+        <line>
+            <choise id="id_choices" value='dump' choices="dump;list;package;crunch"/>
+        </line>
+        <line>
+            <static title="Text:" width='50' />
+            <text id='id_text' height='100' multi_line="true"/>
+        </line>
+        <line>
+            <button id='id_button' title='Button'/>
+        </line>
+        <line>
+            <check_list id='id_check_list' choices="list;du[semicolon]mp;package;remove;add;crunch;s[ingleCrunch]"  value="du[semicolon]mp;package;remove;add" height="140"/>
+            <radio_box id='id_radio_box' choices="list;dump;package;remove;add;crunch;s[ingleCrunch]"  value="package" height="140" columns="2"/>
+        </line>
+
+        <line>
+            <check id='id_check' title='Check' value="true"/>
+        </line>
+        <line>
+            <combo_box id='id_combo_box' title='combo_box' choices="list;dump;package;remove;add;crunch;s[ingleCrunch]"  value=""/>
+        </line>
+    </panel>
+    <panel name='File'>
+        <line>
+            <file id='id_file' title='File:' choices="/home;/work"  value="" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"/>
+        </line>
+        <line>
+            <folder id='id_folder' title='Select Folder:' value="/home"/>
+        </line>
+        <line>
+            <multi_files id='id_multi_files' title='File:' choices="/home;/work"
+                  value="/home" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"
+                  height="100"
+            />
+        </line>
+    </panel>
+    <panel name='DateTime'>
+        <line>
+            <date id='id_date' title='Select Date:' value="2017-02-01"/>
+        </line>
+        <line>
+            <date id='id_time' title='Time:' value="10:01:01"/>
+        </line>
+        <line>
+            <datetime id='id_datetime' title='DateTime:' value="2017-02-01 10:01:01"/>
+        </line>
+    </panel>
+</notebook>
+<line align="right">
+    <button id='id_cancel' title='Cancel' width="100"/>
+    <button id='id_ok' title='Ok' width="100"/>
+</line>
+</form>

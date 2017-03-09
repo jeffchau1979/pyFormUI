@@ -1,0 +1,62 @@
+<?xml version="1.0"?> 
+<form title="Find GUI" width='450' height='530'>
+    <line>
+        <static_line title="Search in Paths:"/>
+    </line>
+    <line>
+        <multi_folders id="id_path" height="100" value="."/>
+    </line>
+
+    <line>
+        <static title="File:" width='60'/>
+        <text id="id_search"/>
+    </line>
+
+    <line>
+        <static title="SearchType:" width='100' />
+        <choise id='id_search_type' choices="Default;Ignore Case;Full Path" value="Default"/>
+    </line>
+
+    <line>
+        <static title="Size(Large Than):" width='150' />
+        <text id='id_size_large' />
+        <choise id='id_size_large_unit' choices='c;k;M;G' value="k" width="60"/>
+    </line>
+
+    <line>
+        <static title="Size(Small Than):" width='150' />
+        <text id='id_size_small' />
+        <choise id='id_size_small_unit' choices='c;k;M;G' value="k" width="60"/>
+    </line>
+    <line>
+        <static title="Modify After:" width='150' />
+        <text id='id_modify_after' />
+        <choise id='id_modify_after_unit' choices='min;day' value="min" width="60"/>
+    </line>
+
+    <line>
+        <static title="Access After:" width='150' />
+        <text id='id_access_after' />
+        <choise id='id_access_after_unit' choices='min;day' value="min" width="60"/>
+    </line>
+
+    <line>
+        <static title="Type:" width='150' />
+        <choise id='id_type' choices='any;file;directory' value="any"/>
+    </line>
+    <line>
+        <static title="Contain Text:" width='150' />
+        <text id='id_search_text' value=""/>
+    </line>
+    <line>
+        <static title="Post Excute:" width='100' />
+        <combo_box id='id_excute' choices=';ls -l;cat' value=""/>
+    </line>
+    <line>
+        <static title="Save Result to File:" width='150' />
+        <text id='id_save_file' value=""/>
+    </line>
+    <line align="right">
+        <button id='id_btn_search' title='Search' width="100"/>
+    </line>
+</form>

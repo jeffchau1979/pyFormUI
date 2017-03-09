@@ -1,0 +1,10 @@
+<?xml version="1.0"?> 
+<form title="Demo GUI" width='500' height='600'>
+<menubar>
+	<menu title='File'>
+        <menu title='SubMenu'>
+		    <menu title='MenuItem' id='id_menu' enable="false"/>
+        </menu>
+	</menu>
+</menubar>
+</form>
