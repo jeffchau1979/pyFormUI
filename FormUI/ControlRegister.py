@@ -60,6 +60,8 @@ class CtrlRegist():
             return item['value']
         else:
             return None
+
+    @staticmethod
     def onSetValue(item, value):
         if hasattr(item['control'], 'SetValue'):
             item['control'].SetValue(value)

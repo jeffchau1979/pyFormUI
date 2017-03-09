@@ -14,13 +14,6 @@ import uuid
 from xml.dom.minidom import parse
 import xml.dom.minidom
 import  wx
-DEFAULT_LINE_HEIGHT = 29
-DEFAULT_BUTTON_WIDTH = 100
-DEFAULT_MENUBAR_HEIGHT = 29
-DEFAULT_COMMANDBAR_EDGE_TOP = 5
-DEFAULT_COMMANDBAR_EDGE_BOTTOM = 5
-DEFAULT_LINE_WIDTH_EDGE = 5
-DEFAULT_LINE_HEIGHT_SPACE = 5
 
 def convertBool(value):
     if isinstance(value, (str, unicode)):
@@ -79,18 +72,18 @@ class Form():
 
         fixHeight = 0
         if self.menubar is not None:
-            fixHeight = fixHeight + DEFAULT_MENUBAR_HEIGHT
+            fixHeight = fixHeight + Builder.DEFAULT_MENUBAR_HEIGHT
         fixLineCount = 0
         for line in self.lines:
             line.format(builder)
             if line.height > 0:
-                fixHeight = fixHeight + line.height
+                fixHeight = fixHeight + line.height + Builder.DEFAULT_LINE_HEIGHT_SPACE
                 fixLineCount = fixLineCount + 1
         if fixLineCount < len(self.lines):
             autoLineHeight = (self.windowHeight - fixHeight) / (len(self.lines) - fixLineCount)
             for line in self.lines:
                 if line.height < 0:
-                    line.height =  autoLineHeight
+                    line.height =  autoLineHeight - Builder.DEFAULT_LINE_HEIGHT_SPACE
 
 class Notebook():
     def __init__(self, id):
@@ -166,14 +159,14 @@ class Line():
                 fixedItemCount += 1
                 fixedItemWidth += int(item['width'])
             if 'height' not in item.keys():
-                item['height'] = "%d" % DEFAULT_LINE_HEIGHT
+                item['height'] = "%d" % Builder.DEFAULT_LINE_HEIGHT
             if int(item['height']) > self.height:
                 self.height = int(item['height'])
             if 'visible' not in item.keys():
                 item['visible'] = "true"
 
         if fixedItemCount < len(self.items):
-            spaceWidth = builder.form.windowWidth - fixedItemWidth - DEFAULT_LINE_WIDTH_EDGE*2
+            spaceWidth = builder.form.windowWidth - fixedItemWidth - Builder.DEFAULT_LINE_WIDTH_EDGE*2
             itemWidth = spaceWidth / (len(self.items) - fixedItemCount)
             for item in self.items:
                 if not 'width' in item.keys():
@@ -200,6 +193,11 @@ class Menu():
         elif paraName == 'enable':
             self.enable = convertBool(paraValue)
 class Builder():
+    DEFAULT_LINE_HEIGHT = wx.DefaultSize.y
+    DEFAULT_MENUBAR_HEIGHT = wx.DefaultSize.y
+    DEFAULT_BUTTON_WIDTH = 100
+    DEFAULT_LINE_WIDTH_EDGE = 5
+    DEFAULT_LINE_HEIGHT_SPACE = 5
     def __init__(self):
         self.form = Form()
 

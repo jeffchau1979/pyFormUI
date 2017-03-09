@@ -11,7 +11,7 @@
 import wx
 import wx.lib.masked.timectrl
 import wx.lib.filebrowsebutton
-import Builder
+from Builder import *
 import os
 
 def getItemValue(item, key, defaultValue=""):

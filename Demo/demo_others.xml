@@ -20,7 +20,7 @@
             <date id='id_date' title='Select Date:' value="2017-02-01"/>
         </line>
         <line>
-            <date id='id_time' title='Time:' value="10:01:01"/>
+            <time id='id_time' title='Time:' value="10:01:01"/>
         </line>
         <line>
             <datetime id='id_datetime' title='DateTime:' value="2017-02-01 10:01:01"/>

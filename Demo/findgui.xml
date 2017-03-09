@@ -1,5 +1,5 @@
 <?xml version="1.0"?> 
-<form title="Find GUI" width='450' height='530'>
+<form title="Find GUI" width='450' height='600'>
     <line>
         <static_line title="Search in Paths:"/>
     </line>

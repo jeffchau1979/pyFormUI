@@ -35,17 +35,40 @@ class Frame(wx.Frame,FormCtrl):
         self.windowHandler = WindowHandler(self)
         self.windowInit = False
 
+    def initDefaultSize(self, builder,parent):
+        if wx.VERSION[0] < 3:
+            mesureButton = wx.Button(parent, -1, "Mesure")
+            Builder.DEFAULT_LINE_HEIGHT = mesureButton.GetDefaultSize().y
+            mesureButton.Destroy()
+        else:
+            Builder.DEFAULT_LINE_HEIGHT = wx.Button.GetDefaultSize().y
+        menuBar = wx.MenuBar()
+        Builder.DEFAULT_MENUBAR_HEIGHT = menuBar.GetSize().y
+        menuBar.Destroy()
+
     def __init__(self, parent, builder,workQueue):
         self.resultList = {}
         self.idPanelMap = {}
-        self.bCallReturn = False
         self.initSuccess = True
+        self.initDefaultSize(builder,parent)
         builder.format()
         self.builder = builder
         self.workQueue = workQueue
         self.uiQueue = Queue.Queue(30)
         self.handlerFinishQueue = Queue.Queue(1)
         self._init_ctrls(parent)
+        EVT_RESULT(self, self.handlerWorkUIEvent)
+
+    def updateDisplay(self, msg):
+        """
+        Receives data from thread and updates the display
+        """
+        t = msg.data
+        if isinstance(t, int):
+            self.displayLbl.SetLabel("Time since thread started: %s seconds" % t)
+        else:
+            self.displayLbl.SetLabel("%s" % t)
+            self.btn.Enable()
 
     def showForm(self):
         self.SetTitle(self.form.title)
@@ -69,32 +92,15 @@ class Frame(wx.Frame,FormCtrl):
             para = self.windowControl.makeReturnPara(id)
 
             if para['handler'] is not None or self.builder.defaultHandler is not None:
-               if self.bCallReturn:
-                   wx.MessageBox(message="The Last handler isn't finished, Please wait.", caption="Info", style=wx.OK | wx.ICON_INFORMATION, parent=self)
-                   print("he Last handler isn't finished, Please wait.")
-                   return
-
                if para['handler'] is not None:
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
-
-               self.timer = wx.Timer(self)
-               self.Bind(wx.EVT_TIMER, self.handlerWorkUIEvent, self.timer)
-               self.timer.Start(50)
-               self.bCallReturn = True
                return True
         return False
 
-    def handlerWorkUIEvent(self,evt):
+    def handlerWorkUIEvent(self,msg):
        #waitting and deal the message from workThead
-       self.timer.Stop()
-       try:
-           task = self.uiQueue.get(block=True,timeout=2)
-       except Queue.Empty:
-           self.timer.Start(100)
-           return
-       eventType = task[0]
-       para = task[1]
-       self.uiQueue.task_done()
+       para = msg.data
+       eventType = para['event']
        if eventType == EVENT_WORKTHREAD_UPDATE:
             self.update(para['builder'], para['updateWindow'])
        elif eventType == EVENT_WORKTHREAD_CLOSE:
@@ -115,7 +121,6 @@ class Frame(wx.Frame,FormCtrl):
        elif eventType == EVENT_WORKTHREAD_HANDLER_FINISH:
             #if self.bCloseWindow:
             #    self.Close()
-            self.bCallReturn = False
             return
        elif eventType == EVENT_WORKTHREAD_MESSAGEBOX:
             style = wx.OK | wx.ICON_INFORMATION | wx.STAY_ON_TOP
@@ -129,4 +134,3 @@ class Frame(wx.Frame,FormCtrl):
            pass
        if para and 'syncTask' in para.keys() and para['syncTask'] == True:
            self.handlerFinishQueue.put([EVENT_UITHREAD_HANDLER_FINISH], block=True, timeout=None)
-       self.timer.Start(100)

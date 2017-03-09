@@ -29,6 +29,19 @@ EVENT_UITHREAD_HANDLER_FINISH = 10
 EVENT_WORKTHREAD_ENABLE_MENU = 11
 EVENT_WORKTHREAD_ITEM_SET_VALUE = 12
 
+EVT_RESULT_ID = wx.NewId()
+
+def EVT_RESULT(win, func):
+    """Define Result Event."""
+    win.Connect(-1, -1, EVT_RESULT_ID, func)
+
+
+class ResultEvent(wx.PyEvent):
+    def __init__(self, data):
+        wx.PyEvent.__init__(self)
+        self.SetEventType(EVT_RESULT_ID)
+        self.data = data
+
 class WindowControl():
     def __init__(self, handlerMap, window):
         self.window = window
@@ -70,7 +83,7 @@ class WindowControl():
         if itemId not in self.id2CtrlMap.keys():
             return
 
-        itemList = self.id2CtrlMap[itemId]
+        itemList = self.id2ItemMap[itemId]
         for item in itemList:
             global gControlRegister
             if item['type'] in gControlRegister.keys():
@@ -218,11 +231,11 @@ class CtrlBase():
         self.viewHeight = edge
         self.lineNum = 0
         for line in self.lines:
-            if isinstance(line, Builder.Line):
+            if isinstance(line, Line):
                 self.createLine(line)
-            if isinstance(line, Builder.Panel):
+            if isinstance(line, Panel):
                 self.createPanel(line)
-            if isinstance(line, Builder.Notebook):
+            if isinstance(line, Notebook):
                 self.createNotebook(line)
         self.SetSizer(self.windowSizer)
         self.SetAutoLayout(1)
@@ -391,39 +404,46 @@ class WindowHandler():
     def showWindow(self, bShow):
         para = {}
         para['bShow'] = bShow
-        self.window.uiQueue.put([EVENT_WORKTHREAD_SHOW, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_SHOW
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def enableCtrl(self, itemId, bEnable):
         para = {}
         para['itemId'] = itemId
         para['bEnable'] = bEnable
-        self.window.uiQueue.put([EVENT_WORKTHREAD_ENABLE_ITEM, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_ENABLE_ITEM
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def showCtrl(self, itemId, bShow):
         para = {}
         para['itemId'] = itemId
         para['bShow'] = bShow
-        self.window.uiQueue.put([EVENT_WORKTHREAD_SHOW_ITEM, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_SHOW_ITEM
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def setValue(self,itemId, value):
         para = {}
         para['itemId'] = itemId
         para['value'] = value
-        self.window.uiQueue.put([EVENT_WORKTHREAD_ITEM_SET_VALUE, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_ITEM_SET_VALUE
+        wx.PostEvent(self.window, ResultEvent(para))
+
 
     def update(self, builder, updateWindow):
-        builder.format()
         para = {}
         para['builder'] = builder
         para['updateWindow'] = updateWindow
-        self.window.uiQueue.put([EVENT_WORKTHREAD_UPDATE, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_UPDATE
+        wx.PostEvent(self.window, ResultEvent(para))
+
 
     def messageBox(self,message, caption):
         para = {}
         para['message'] = message
         para['caption'] = caption
         self.__setWaitHandler(para)
-        self.window.uiQueue.put([EVENT_WORKTHREAD_MESSAGEBOX, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_MESSAGEBOX
+        wx.PostEvent(self.window, ResultEvent(para))
         self.__waitHandlerFinish()
 
     def confirmMessageBox(self,message, caption, bWithCancelButton=False):
@@ -432,7 +452,8 @@ class WindowHandler():
         para['caption'] = caption
         para['bWithCancelButton'] = bWithCancelButton
         self.__setWaitHandler(para)
-        self.window.uiQueue.put([EVENT_WORKTHREAD_CONFIRM_MESSAGEBOX, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_CONFIRM_MESSAGEBOX
+        wx.PostEvent(self.window, ResultEvent(para))
         ret = self.__waitHandlerFinish()
         if ret ==  wx.ID_YES:
             return 'yes'
@@ -445,7 +466,8 @@ class WindowHandler():
         #self.window.highlightItem(itemId)
         para = {}
         para['itemId'] = itemId
-        self.window.uiQueue.put([EVENT_WORKTHREAD_HIGHLIGHT_ITEM, para], block=True, timeout=None)
+        para['event'] = EVENT_WORKTHREAD_HIGHLIGHT_ITEM
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def getBuilder(self):
         return  self.window.builder

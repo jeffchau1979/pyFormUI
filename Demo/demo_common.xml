@@ -6,11 +6,11 @@
             <static_line align='center' title="Title"/>
         </line>
         <line>
-            <choise id="id_type21" value='dump' choices="dump;list;package;crunch"/>
+            <choise id="id_choices" value='dump' choices="dump;list;package;crunch"/>
         </line>
 
         <line>
-            <static title="This is Title:" width='100' />
+            <static title="Text:" width='50' />
             <text id='id_text' height='100' multi_line="true"/>
         </line>
         <line>
