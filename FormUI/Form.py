@@ -154,7 +154,7 @@ class CtrlBase():
             flag = flag | wx.ALIGN_RIGHT
         elif line.align == 'left':
             flag = flag | wx.ALIGN_LEFT
-        self.windowSizer.AddWindow(lineSizer, 0, border=0, flag=flag)
+        self.windowSizer.AddWindow(lineSizer, 0, border=Builder.DEFAULT_LINE_WIDTH_EDGE, flag=wx.LEFT|flag)
 #        if line.lineId != "":
 #            self.idLineMap[line.lineId] = lineSizer
         if line.visible == False:
@@ -282,11 +282,6 @@ class LineCtrl(wx.BoxSizer):
         wx.BoxSizer.__init__(self,wx.HORIZONTAL)
         self.windowControl =  windowControl
         self.parent = parent
-    def addItem(self,item):
-        #flag = wx.ALIGN_LEFT
-        #wx.ALIGN_RIGHT
-        #wx.ALIGN_CENTER_HORIZONTAL
-        self.AddWindow(item, 0, border=0, flag=0)
     def createMultiFolderFileControl(self, item,value,itemWidth, itemHeight,bAddFile,bAddFolder):
         item['control'] = MultiFolderFile(parent=self.parent,
                                    pos=wx.Point(0, 0),

@@ -173,7 +173,7 @@ class Line():
                 item['visible'] = "true"
 
         if fixedItemCount < len(self.items):
-            spaceWidth = builder.form.windowWidth - fixedItemWidth - DEFAULT_LINE_WIDTH_EDGE
+            spaceWidth = builder.form.windowWidth - fixedItemWidth - DEFAULT_LINE_WIDTH_EDGE*2
             itemWidth = spaceWidth / (len(self.items) - fixedItemCount)
             for item in self.items:
                 if not 'width' in item.keys():
