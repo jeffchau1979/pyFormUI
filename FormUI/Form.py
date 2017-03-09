@@ -318,6 +318,11 @@ class LineCtrl(wx.BoxSizer):
         global gControlRegister
         if item['type'] in gControlRegister.keys():
             item['control'] = gControlRegister[item['type']].onCreate(item, self.parent,self.windowControl)
+        else:
+            return
+
+        if 'value' in item.keys() and item['value'] != '':
+            gControlRegister[item['type']].onSetValue(item, item['value'])
 
         if 'visible' in item.keys():
             if item['visible'] == 'false':

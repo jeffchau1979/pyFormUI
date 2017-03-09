@@ -81,9 +81,6 @@ class ChoiseRegist(CtrlRegist):
         para['choices'] =  getItemValue(item, 'choices', [])
         itemCtrl = wx.Choice(**para)
         value = getItemValue(item, 'value', '')
-        index = getItemValue(item, 'choices', []).index(value)
-        if index >= 0:
-            itemCtrl.Select(index)
         windowControl.registItemHandler(itemCtrl, wx.EVT_CHOICE, para['id'])
         return itemCtrl
 
@@ -129,14 +126,6 @@ class CheckListRegist(CtrlRegist):
         choices = getItemValue(item, 'choices', [])
         para['choices'] = choices
         itemCtrl = wx.CheckListBox(**para)
-        value = getItemValue(item, 'value', '')
-        default_check = []
-        for check_item in value:
-            if check_item in choices:
-                index = choices.index(check_item)
-                default_check.append(index)
-        itemCtrl.SetChecked(default_check)
-
         return itemCtrl
     @staticmethod
     def onGetValue(item):
@@ -169,9 +158,6 @@ class RadioBoxRegist(CtrlRegist):
         para['majorDimension'] = int(getItemValue(item, 'columns', '1'))
         para['style'] = para['style'] | wx.RA_SPECIFY_COLS
         itemCtrl = wx.RadioBox(**para)
-        value = getItemValue(item, 'value', '')
-        index = choices.index(value)
-        itemCtrl.SetSelection(index)
         windowControl.registItemHandler(itemCtrl, wx.EVT_RADIOBOX, para['id'])
         return itemCtrl
     @staticmethod
@@ -191,9 +177,6 @@ class CheckRegist(CtrlRegist):
         para = CtrlRegist.makeCommonPara(item,parent)
         para['label'] = CtrlRegist.getLable(item)
         itemCtrl = wx.CheckBox(**para)
-        value = getItemValue(item, 'value', '')
-        if value == 'true':
-            itemCtrl.SetValue(True)
         windowControl.registItemHandler(itemCtrl, wx.EVT_CHECKBOX, para['id'])
         return itemCtrl
     @staticmethod
@@ -231,15 +214,6 @@ class DateRegist(CtrlRegist):
         para = CtrlRegist.makeCommonPara(item,parent)
         para['style'] = para['style'] | wx.DP_SHOWCENTURY | wx.DP_DEFAULT
         itemCtrl = wx.DatePickerCtrl(**para)
-        value = getItemValue(item, 'value', '')
-        if value != "":
-            dt = wx.DateTime()
-            dt.ParseDate(value)
-            itemCtrl.SetValue(dt)
-        if value != "":
-            dt = wx.DateTime()
-            dt.ParseDate(value)
-            itemCtrl.SetValue(dt)
         return itemCtrl
     @staticmethod
     def onGetValue(item):
@@ -321,9 +295,6 @@ class FolderRegist(CtrlRegist):
         para['startDirectory'] = value
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         itemCtrl =   wx.lib.filebrowsebutton.DirBrowseButton(**para)
-
-        if value != "":
-            itemCtrl.SetValue(value)
         return itemCtrl
 gControlRegister['folder'] = FolderRegist
 
@@ -340,8 +311,6 @@ class FolderRegist(CtrlRegist):
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         itemCtrl =   wx.lib.filebrowsebutton.DirBrowseButton(**para)
 
-        if value != "":
-            itemCtrl.SetValue(value)
         return itemCtrl
 gControlRegister['folder'] = FolderRegist
 
@@ -356,8 +325,6 @@ class MultiFilesRegist(CtrlRegist):
         para['bAddFolder'] = False
         value = getItemValue(item, 'value', '')
         itemCtrl =  MultiFolderFile(**para)
-        if value != "":
-            itemCtrl.SetValue(value)
         return itemCtrl
 gControlRegister['multi_files'] = MultiFilesRegist
 
@@ -371,8 +338,6 @@ class MultiFoldersRegist(CtrlRegist):
         para['bAddFolder'] = True
         value = getItemValue(item, 'value', '')
         itemCtrl =  MultiFolderFile(**para)
-        if value != "":
-            itemCtrl.SetValue(value)
         return itemCtrl
 gControlRegister['multi_folders'] = MultiFoldersRegist
 
