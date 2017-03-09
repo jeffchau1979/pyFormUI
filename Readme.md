@@ -3,6 +3,9 @@ pyFormUI -- A Simple Form GUI for python
 ========================================
 pyFormUI provide the most easy way to show a Form Dialog for python,which is based on the cross-platform library wxPython.pyFormUI use xml file to design GUI, no any wxpython Knowledge is need when using pyFormUI.
 
+![Screenshot](https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/demo1.png)
+![Screenshot](https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/demo2.png)
+![Screenshot](https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/demo3.png)
 
 Installation
 ------------
@@ -18,6 +21,7 @@ python setup.py install
 Simple Example:
 --------
 Please Find the code of this Example in files Demo/SimpleDemo.py and Demo/SimpleDemo.xml
+![Screenshot](https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/SimpleDemo.png)
 1.Create GUI by xml
 ```xml
 <?xml version="1.0"?>
@@ -63,3 +67,4 @@ Find more Demos in Demo Folder.
   python FindGui.py
 ```
   This Demo Implement the GUI for linux find cmd.
+  ![Screenshot](https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/findgui.png)
