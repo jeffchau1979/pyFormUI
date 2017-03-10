@@ -63,8 +63,6 @@ class FormUI():
                     if windowHandler.windowClosed:
                         self.returnOK = windowHandler.returnOk
                         self.resultList = para['result_list']
-                    else:
-                        windowHandler.window.uiQueue.put([EVENT_WORKTHREAD_HANDLER_FINISH, None], block=True, timeout=None)
             elif  eventType == EVENT_TYPE_APP_CLOSE:
                 break
             else:

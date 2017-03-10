@@ -3,14 +3,14 @@
 <notebook  id="id_notebook">
     <panel name='File'>
         <line>
-            <file id='id_file' title='File:' choices="/home;/work"  value="" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"/>
+            <file id='id_file' title='File:' choices="~/.demo.cfg"  value="" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"/>
         </line>
         <line>
             <folder id='id_folder' title='Select Folder:' value="/home"/>
         </line>
         <line>
-            <multi_files id='id_multi_files' title='File:' choices="/home;/work"
-                  value="/home" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"
+            <multi_files id='id_multi_files' title='File:'
+                  value="~/.demo.cfg" mark="xls file(*.xls)|*.xls|Any File(*.*)|*.*"
                   height="100"
             />
         </line>

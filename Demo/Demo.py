@@ -43,8 +43,9 @@ def button_handler(windowHandler, para):
     #ret = windowHandler.confirmMessageBox("ok button click", "title")
     #windowHandler.enableCtrl('id_multi_files', False)
     #windowHandler.highlightItem('id_multi_files')
-    builder.setCtrlAttribute('id_text', 'value', 'update builder')
-    windowHandler.update(builder,True)
+    #builder.setCtrlAttribute('id_text', 'value', 'update builder')
+    #windowHandler.update(builder,True)
+    windowHandler.showForm(builder)
 builder.setCtrlHandler('id_button', button_handler)
 
 def menu_handler(windowHandler, para):

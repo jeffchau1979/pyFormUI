@@ -22,19 +22,18 @@ EVENT_WORKTHREAD_SHOW = 3
 EVENT_WORKTHREAD_SHOW_ITEM = 4
 EVENT_WORKTHREAD_ENABLE_ITEM = 5
 EVENT_WORKTHREAD_HIGHLIGHT_ITEM = 6
-EVENT_WORKTHREAD_HANDLER_FINISH = 7
-EVENT_WORKTHREAD_MESSAGEBOX = 8
-EVENT_WORKTHREAD_CONFIRM_MESSAGEBOX = 9
-EVENT_UITHREAD_HANDLER_FINISH = 10
-EVENT_WORKTHREAD_ENABLE_MENU = 11
-EVENT_WORKTHREAD_ITEM_SET_VALUE = 12
+EVENT_WORKTHREAD_MESSAGEBOX = 7
+EVENT_WORKTHREAD_CONFIRM_MESSAGEBOX = 8
+EVENT_UITHREAD_HANDLER_FINISH = 9
+EVENT_WORKTHREAD_ENABLE_MENU = 10
+EVENT_WORKTHREAD_ITEM_SET_VALUE = 11
+EVENT_WORKTHREAD_SHOWFORM = 12
 
 EVT_RESULT_ID = wx.NewId()
 
 def EVT_RESULT(win, func):
     """Define Result Event."""
     win.Connect(-1, -1, EVT_RESULT_ID, func)
-
 
 class ResultEvent(wx.PyEvent):
     def __init__(self, data):
@@ -404,7 +403,9 @@ class WindowHandler():
     def closeWindow(self, returnOk = True):
         self.windowClosed = True
         self.returnOk = True
-        self.window.uiQueue.put([EVENT_WORKTHREAD_CLOSE, None], block=True, timeout=None)
+        para = {}
+        para['event'] = EVENT_WORKTHREAD_CLOSE
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def showWindow(self, bShow):
         para = {}
@@ -441,6 +442,11 @@ class WindowHandler():
         para['event'] = EVENT_WORKTHREAD_UPDATE
         wx.PostEvent(self.window, ResultEvent(para))
 
+    def showForm(self,builder):
+        para = {}
+        para['builder'] = builder
+        para['event'] = EVENT_WORKTHREAD_SHOWFORM
+        wx.PostEvent(self.window, ResultEvent(para))
 
     def messageBox(self,message, caption):
         para = {}

@@ -6,9 +6,8 @@
             <static_line align='center' title="Title"/>
         </line>
         <line>
-            <choise id="id_choices" value='dump' choices="dump;list;package;crunch"/>
+            <choise id="id_choices" value='orange' choices="apple;orange;peach;pear"/>
         </line>
-
         <line>
             <static title="Text:" width='50' />
             <text id='id_text' height='100' multi_line="true"/>
@@ -17,15 +16,15 @@
             <button id='id_button' title='Button'/>
         </line>
         <line>
-            <check_list id='id_check_list' choices="list;dump;package;remove;add;crunch;s[ingleCrunch]"  value="dump;package;remove;add" height="70"/>
-            <radio_box id='id_radio_box' choices="list;dump;package;remove;add;crunch;s[ingleCrunch]"  value="package" height="70" columns="2"/>
+            <check_list id='id_check_list' choices="apple[semicolon]orange;peach;pear"  value="apple[semicolon]orange;peach;pear" height="140"/>
+            <radio_box id='id_radio_box' choices="apple;orange;peach;pear"  value="orange" height="140" columns="2"/>
         </line>
 
         <line>
             <check id='id_check' title='Check' value="true"/>
         </line>
         <line>
-            <combo_box id='id_combo_box' title='combo_box' choices="list;dump;package;remove;add;crunch;s[ingleCrunch]"  value=""/>
+            <combo_box id='id_combo_box' title='combo_box' choices="apple;orange;peach;pear"  value="orange"/>
         </line>
     </panel>
 </notebook>

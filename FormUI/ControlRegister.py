@@ -65,6 +65,8 @@ class CtrlRegist():
     def onSetValue(item, value):
         if hasattr(item['control'], 'SetValue'):
             item['control'].SetValue(value)
+
+
 class StaticRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -73,6 +75,7 @@ class StaticRegist(CtrlRegist):
         itemCtrl = wx.StaticText(**para)
         return itemCtrl
 gControlRegister['static'] = StaticRegist
+
 
 class ChoiseRegist(CtrlRegist):
     @staticmethod
@@ -96,6 +99,7 @@ class ChoiseRegist(CtrlRegist):
 
 gControlRegister['choise'] = ChoiseRegist
 
+
 class TextRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -118,6 +122,7 @@ class StaticLineRegist(CtrlRegist):
         itemCtrl = StaticLine(**para)
         return itemCtrl
 gControlRegister['static_line'] = StaticLineRegist
+
 
 class CheckListRegist(CtrlRegist):
     @staticmethod
@@ -207,7 +212,6 @@ class ComboBoxRegist(CtrlRegist):
 gControlRegister['combo_box'] = ComboBoxRegist
 
 
-
 class DateRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -254,6 +258,7 @@ class DateTimeRegist(CtrlRegist):
         return itemCtrl
 gControlRegister['datetime'] = DateTimeRegist
 
+
 class ButtonRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -263,6 +268,7 @@ class ButtonRegist(CtrlRegist):
         windowControl.registItemHandler(itemCtrl, wx.EVT_BUTTON, para['id'])
         return itemCtrl
 gControlRegister['button'] = ButtonRegist
+
 
 class FileRegist(CtrlRegist):
     @staticmethod
@@ -285,6 +291,7 @@ class FileRegist(CtrlRegist):
         return itemCtrl
 gControlRegister['file'] = FileRegist
 
+
 class FolderRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -299,7 +306,6 @@ class FolderRegist(CtrlRegist):
 gControlRegister['folder'] = FolderRegist
 
 
-
 class FolderRegist(CtrlRegist):
     @staticmethod
     def onCreate(item, parent, windowControl):
@@ -313,7 +319,6 @@ class FolderRegist(CtrlRegist):
 
         return itemCtrl
 gControlRegister['folder'] = FolderRegist
-
 
 
 class MultiFilesRegist(CtrlRegist):
@@ -340,7 +345,6 @@ class MultiFoldersRegist(CtrlRegist):
         itemCtrl =  MultiFolderFile(**para)
         return itemCtrl
 gControlRegister['multi_folders'] = MultiFoldersRegist
-
 
 
 class MultiFolersFilesRegist(CtrlRegist):

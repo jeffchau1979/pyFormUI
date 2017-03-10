@@ -54,23 +54,11 @@ class Frame(wx.Frame,FormCtrl):
         builder.format()
         self.builder = builder
         self.workQueue = workQueue
-        self.uiQueue = Queue.Queue(30)
         self.handlerFinishQueue = Queue.Queue(1)
         self._init_ctrls(parent)
         EVT_RESULT(self, self.handlerWorkUIEvent)
 
-    def updateDisplay(self, msg):
-        """
-        Receives data from thread and updates the display
-        """
-        t = msg.data
-        if isinstance(t, int):
-            self.displayLbl.SetLabel("Time since thread started: %s seconds" % t)
-        else:
-            self.displayLbl.SetLabel("%s" % t)
-            self.btn.Enable()
-
-    def showForm(self):
+    def showMainForm(self):
         self.SetTitle(self.form.title)
         self.SetPosition(wx.Point(self.form.windowPosX, self.form.windowPosY))
         self.SetSize(wx.Size(self.form.windowWidth, self.form.windowHeight))
@@ -85,8 +73,12 @@ class Frame(wx.Frame,FormCtrl):
          if self.windowInit is False:
              self.DestroyForm()
          self.windowControl = WindowControl(self.builder.handlerMap, self)
-         self.showForm()
-
+         self.showMainForm()
+    def showForm(self, builder):
+        form = create(None, builder, self.workQueue)
+        if form.initSuccess:
+            form.Show()
+            wx.GetApp().SetTopWindow(form)
     def CallFormHandler(self, id):
         if self.workQueue is not None:
             para = self.windowControl.makeReturnPara(id)
@@ -98,11 +90,12 @@ class Frame(wx.Frame,FormCtrl):
         return False
 
     def handlerWorkUIEvent(self,msg):
-       #waitting and deal the message from workThead
        para = msg.data
        eventType = para['event']
        if eventType == EVENT_WORKTHREAD_UPDATE:
             self.update(para['builder'], para['updateWindow'])
+       elif eventType == EVENT_WORKTHREAD_SHOWFORM:
+           self.showForm(para['builder'])
        elif eventType == EVENT_WORKTHREAD_CLOSE:
            self.Close()
        elif eventType == EVENT_WORKTHREAD_SHOW:
@@ -118,10 +111,6 @@ class Frame(wx.Frame,FormCtrl):
            self.windowControl.setItemValue(para['itemId'], para['value'])
        elif eventType == EVENT_WORKTHREAD_HIGHLIGHT_ITEM:
            self.windowControl.highlightItem(para['itemId'])
-       elif eventType == EVENT_WORKTHREAD_HANDLER_FINISH:
-            #if self.bCloseWindow:
-            #    self.Close()
-            return
        elif eventType == EVENT_WORKTHREAD_MESSAGEBOX:
             style = wx.OK | wx.ICON_INFORMATION | wx.STAY_ON_TOP
             wx.MessageBox(message=para['message'], caption=para['caption'], style= style, parent=self)
