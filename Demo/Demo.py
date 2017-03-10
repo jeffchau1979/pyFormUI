@@ -43,10 +43,22 @@ def button_handler(windowHandler, para):
     #ret = windowHandler.confirmMessageBox("ok button click", "title")
     #windowHandler.enableCtrl('id_multi_files', False)
     #windowHandler.highlightItem('id_multi_files')
-    #builder.setCtrlAttribute('id_text', 'value', 'update builder')
-    #windowHandler.update(builder,True)
-    windowHandler.showForm(builder)
+    builder.setCtrlAttribute('id_text', 'value', 'update builder')
+    windowHandler.update(builder,True)
 builder.setCtrlHandler('id_button', button_handler)
+
+builderFind = Builder()
+builderFind.loadLayout('findgui.xml')
+def findOk(windowHandler, para):
+    resultList = para['result_list']
+    cmd = ""
+    windowHandler.closeWindow()
+builderFind.setCtrlHandler('id_btn_search', findOk)
+
+def button_findgui_handler(windowHandler, para):
+    state, resultList = windowHandler.showForm(builderFind,True)
+    print resultList
+builder.setCtrlHandler('id_button_findgui', button_findgui_handler)
 
 def menu_handler(windowHandler, para):
     windowHandler.closeWindow()

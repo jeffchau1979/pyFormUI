@@ -12,22 +12,7 @@
 import wx.lib.filebrowsebutton
 import Queue
 from ControlRegister import  *
-
-EVENT_TYPE_APP_CLOSE = 1
-EVENT_TYPE_WINDOW_CONTROL = 2
-
-EVENT_WORKTHREAD_UPDATE = 1
-EVENT_WORKTHREAD_CLOSE = 2
-EVENT_WORKTHREAD_SHOW = 3
-EVENT_WORKTHREAD_SHOW_ITEM = 4
-EVENT_WORKTHREAD_ENABLE_ITEM = 5
-EVENT_WORKTHREAD_HIGHLIGHT_ITEM = 6
-EVENT_WORKTHREAD_MESSAGEBOX = 7
-EVENT_WORKTHREAD_CONFIRM_MESSAGEBOX = 8
-EVENT_UITHREAD_HANDLER_FINISH = 9
-EVENT_WORKTHREAD_ENABLE_MENU = 10
-EVENT_WORKTHREAD_ITEM_SET_VALUE = 11
-EVENT_WORKTHREAD_SHOWFORM = 12
+from WorkThread import *
 
 EVT_RESULT_ID = wx.NewId()
 
@@ -442,12 +427,21 @@ class WindowHandler():
         para['event'] = EVENT_WORKTHREAD_UPDATE
         wx.PostEvent(self.window, ResultEvent(para))
 
-    def showForm(self,builder):
+    def showForm(self,builder, bModule=False):
         para = {}
         para['builder'] = builder
+        waitQueue = Queue(1)
         para['event'] = EVENT_WORKTHREAD_SHOWFORM
+        workThread = SubFormThread(waitQueue = waitQueue)
+        para['workThread'] = workThread
         wx.PostEvent(self.window, ResultEvent(para))
-
+        if bModule:
+                try:
+                    task = waitQueue.get(block=True)
+                except Queue.Empty:
+                    pass
+                waitQueue.task_done()
+        return workThread.returnState, workThread.resultList
     def messageBox(self,message, caption):
         para = {}
         para['message'] = message

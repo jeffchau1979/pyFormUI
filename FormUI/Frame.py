@@ -11,9 +11,10 @@
 
 from Form import *
 import Queue
+from WorkThread import *
 
-def create(parent, builder, queue):
-    return Frame(parent,builder, queue)
+def create(parent, builder, workQueue):
+    return Frame(parent,builder, workQueue)
 
 [wxID_DIALOG1BUTTONOK, wxID_DIALOG1BUTTONCANCEL] = [wx.NewId() for _init_ctrls in range(2)]
 
@@ -54,9 +55,10 @@ class Frame(wx.Frame,FormCtrl):
         builder.format()
         self.builder = builder
         self.workQueue = workQueue
-        self.handlerFinishQueue = Queue.Queue(1)
+        self.handlerFinishQueue = Queue(1)
         self._init_ctrls(parent)
         EVT_RESULT(self, self.handlerWorkUIEvent)
+        self.Bind(wx.EVT_CLOSE, self.OnFrameClose)
 
     def showMainForm(self):
         self.SetTitle(self.form.title)
@@ -74,11 +76,17 @@ class Frame(wx.Frame,FormCtrl):
              self.DestroyForm()
          self.windowControl = WindowControl(self.builder.handlerMap, self)
          self.showMainForm()
-    def showForm(self, builder):
-        form = create(None, builder, self.workQueue)
+
+    def onsubFormExit(self, workThread):
+        pass
+
+    def showForm(self, builder,workThread):
+        form = create(None, builder, workThread.queue)
         if form.initSuccess:
             form.Show()
             wx.GetApp().SetTopWindow(form)
+            workThread.start()
+
     def CallFormHandler(self, id):
         if self.workQueue is not None:
             para = self.windowControl.makeReturnPara(id)
@@ -95,7 +103,7 @@ class Frame(wx.Frame,FormCtrl):
        if eventType == EVENT_WORKTHREAD_UPDATE:
             self.update(para['builder'], para['updateWindow'])
        elif eventType == EVENT_WORKTHREAD_SHOWFORM:
-           self.showForm(para['builder'])
+           self.showForm(para['builder'], para['workThread'])
        elif eventType == EVENT_WORKTHREAD_CLOSE:
            self.Close()
        elif eventType == EVENT_WORKTHREAD_SHOW:
@@ -123,3 +131,7 @@ class Frame(wx.Frame,FormCtrl):
            pass
        if para and 'syncTask' in para.keys() and para['syncTask'] == True:
            self.handlerFinishQueue.put([EVENT_UITHREAD_HANDLER_FINISH], block=True, timeout=None)
+
+    def OnFrameClose(self, event):
+        self.workQueue.put([EVENT_TYPE_APP_CLOSE, None, None], block=True, timeout=None)
+        event.Skip()

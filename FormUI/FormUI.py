@@ -11,6 +11,7 @@
 
 
 from Form import *
+from WorkThread import *
 import Frame
 import threading
 import Queue
@@ -22,53 +23,30 @@ import warnings
 warnings.filterwarnings("ignore",".*trying to remove*")
 
 class FormDialogApp(wx.App):
-    def __init__(self, parent, builder, queue):
+    def __init__(self, parent, builder, workQueue):
         super(FormDialogApp, self).__init__(parent)
-        self.main = Frame.create(None, builder, queue)
+        self.main = Frame.create(None, builder, workQueue)
         if self.main.initSuccess:
             self.main.Show()
             self.SetTopWindow(self.main)
 
 class UIThread(threading.Thread):
-    def __init__(self, builder,queue):
+    def __init__(self, builder,workQueue):
         threading.Thread.__init__(self)
-        self.queue = queue
-        self.application = FormDialogApp(0, builder, queue)
+        self.workQueue = workQueue
+        self.application = FormDialogApp(0, builder, workQueue)
     def run(self):
         self.application.MainLoop()
-        self.queue.put([EVENT_TYPE_APP_CLOSE,None,None], block=True, timeout=None)
 
 class FormUI():
     def __init__(self, builder):
         self.builder = builder
-        self.returnOK = False
+        self.returnState = False
     def show(self):
         queue = Queue.Queue(30)
         uiThread = UIThread(self.builder, queue)
         uiThread.start()
-        thread_stop = False
-        while not thread_stop:
-            try:
-                task = queue.get(block=True)
-            except Queue.Empty:
-                thread_stop = True
-                break
-            eventType =  task[0]
-            windowHandler = task[1]
-            para = task[2]
-            if eventType == EVENT_TYPE_WINDOW_CONTROL:
-                if 'handler' in para.keys():
-                    para['handler'](windowHandler,para)
-                    #windowHandler.taskDone()
-                    if windowHandler.windowClosed:
-                        self.returnOK = windowHandler.returnOk
-                        self.resultList = para['result_list']
-            elif  eventType == EVENT_TYPE_APP_CLOSE:
-                break
-            else:
-                continue
-
-            queue.task_done()
+        self.returnState, self.resultList = workThreadRunnable(queue)
 
     @staticmethod
     def getUUIDString():
@@ -87,7 +65,7 @@ class FormUI():
         return cachedValue
 
     def saveCachedValue(self, cachedValueFile, resultList = None):
-        if resultList is None and self.returnOK:
+        if resultList is None and self.returnState:
             resultList = self.resultList
         if resultList is None:
             return
