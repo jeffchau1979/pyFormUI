@@ -193,8 +193,8 @@ class Menu():
         elif paraName == 'enable':
             self.enable = convertBool(paraValue)
 class Builder():
-    DEFAULT_LINE_HEIGHT = wx.DefaultSize.y
-    DEFAULT_MENUBAR_HEIGHT = wx.DefaultSize.y
+    DEFAULT_LINE_HEIGHT = -1
+    DEFAULT_MENUBAR_HEIGHT = -1
     DEFAULT_BUTTON_WIDTH = 100
     DEFAULT_LINE_WIDTH_EDGE = 5
     DEFAULT_LINE_HEIGHT_SPACE = 5
@@ -318,6 +318,7 @@ class Builder():
         self.__addIdMap(lineId, line)
         line.enable = convertBool(self.__xmlGetAttribute(lineNode, 'enable', True))
         line.visible = convertBool(self.__xmlGetAttribute(lineNode, 'visible', True))
+        line.height = int(self.__xmlGetAttribute(lineNode, 'height', -1))
         line.align = str(self.__xmlGetAttribute(lineNode, 'align', 'align'))
         for itemNode in lineNode.childNodes:
             item = self.__xmlItemNode2Item(itemNode)
@@ -342,6 +343,7 @@ class Builder():
             panel = Panel(panelId)
         self.__addIdMap(panelId, panel)
         panel.panelName = self.__xmlGetAttribute(panelNode, 'name')
+        panel.height = int(self.__xmlGetAttribute(panelNode, 'height', -1))
         panel.enable = convertBool(self.__xmlGetAttribute(panelNode, 'enable', True))
         panel.visible = convertBool(self.__xmlGetAttribute(panelNode, 'visible', True))
         #self.panels.append(panel)
@@ -355,6 +357,7 @@ class Builder():
         notebook = self.__getItem(id, Notebook)
         if notebook is None:
             notebook = Notebook(id)
+        notebook.height = int(self.__xmlGetAttribute(notebookNode, 'height', -1))
         self.__addIdMap(id, notebook)
         for panelNode in notebookNode.childNodes:
             if panelNode.nodeName == "panel":
