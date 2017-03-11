@@ -89,12 +89,16 @@ class Frame(wx.Frame,FormCtrl):
 
     def CallFormHandler(self, id):
         if self.workQueue is not None:
-            para = self.windowControl.makeReturnPara(id)
-
-            if para['handler'] is not None or self.builder.defaultHandler is not None:
-               if para['handler'] is not None:
+            ctrlHandler = None
+            if id in self.windowControl.handlerMap.keys():
+                ctrlHandler = self.windowControl.handlerMap[id]
+            if ctrlHandler is not None or self.builder.defaultHandler is not None:
+               if ctrlHandler is not None:
+                   para = self.windowControl.makeReturnPara(id)
+                   para['handler'] = ctrlHandler
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
                if  self.builder.defaultHandler is not None:
+                   para = self.windowControl.makeReturnPara(id)
                    para['handler'] = self.builder.defaultHandler
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
 

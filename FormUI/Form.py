@@ -125,8 +125,6 @@ class WindowControl():
         self.updateResult(resultList)
         para['result_list'] = resultList
         para['handler'] = None
-        if para['id'] in self.handlerMap.keys():
-           para['handler'] = self.handlerMap[para['id']]
         return  para
 
     def OnItemEvent(self, event):
