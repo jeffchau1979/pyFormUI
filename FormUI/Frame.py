@@ -94,6 +94,10 @@ class Frame(wx.Frame,FormCtrl):
             if para['handler'] is not None or self.builder.defaultHandler is not None:
                if para['handler'] is not None:
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
+               if  self.builder.defaultHandler is not None:
+                   para['handler'] = self.builder.defaultHandler
+                   self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
+
                return True
         return False
 
