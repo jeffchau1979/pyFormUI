@@ -418,7 +418,7 @@ class WindowHandler():
         wx.PostEvent(self.window, ResultEvent(para))
 
 
-    def update(self, builder, updateWindow):
+    def update(self, builder, updateWindow=True):
         para = {}
         para['builder'] = builder
         para['updateWindow'] = updateWindow
