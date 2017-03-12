@@ -146,10 +146,11 @@ class CheckListRegist(CtrlRegist):
         if len(choices) < 1:
             return
         default_check = []
-        for check_item in value:
-            index = choices.index(check_item)
-            if index >= 0:
-                default_check.append(index)
+        if value != '':
+            for check_item in value:
+                if check_item in choices:
+                    index = choices.index(check_item)
+                    default_check.append(index)
         item['control'].SetChecked(default_check)
 gControlRegister['check_list'] = CheckListRegist
 
