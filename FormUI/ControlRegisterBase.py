@@ -54,8 +54,8 @@ class CtrlRegistBase():
     @staticmethod
     def onGetValue(item):
         if hasattr(item['control'],'GetValue'):
-            item['value'] = item['control'].GetValue()
-            return item['value']
+            value = item['control'].GetValue()
+            return value
         else:
             return None
 

@@ -85,11 +85,11 @@ class CheckListRegist(CtrlRegistBase):
     @staticmethod
     def onGetValue(item):
         checked_list = item['control'].GetChecked()
-        item['value'] = []
+        value = []
         choices = getItemValue(item, 'choices', [])
         for index in checked_list:
-            item['value'].append(choices[index])
-        return item['value']
+            value.append(choices[index])
+        return value
     @staticmethod
     def onSetValue(item,value):
         choices = getItemValue(item, 'choices', [])

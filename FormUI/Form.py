@@ -61,9 +61,9 @@ class WindowControl():
         global gControlRegister
         for item in self.valueItems:
             if item['type'] in gControlRegister.keys():
-                item['value'] = gControlRegister[item['type']].onGetValue(item)
-                if item['value'] is not None:
-                    valueList[item['id']] = item['value']
+                value = gControlRegister[item['type']].onGetValue(item)
+                if value is not None:
+                    valueList[item['id']] = value
 
     def setItemValue(self,itemId, value):
         if itemId not in self.id2CtrlMap.keys():
