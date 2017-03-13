@@ -35,6 +35,7 @@ class WindowControl():
         self.id2CtrlMap = {}
         self.id2ItemMap = {}
         self.valueItems = []
+        self.eventTypeNameMap = {}
 
     def registItem(self, id, eventId, item, control):
         if item is not None:
@@ -52,16 +53,17 @@ class WindowControl():
             self.eventId2IdMap[eventId] = id
             self.id2EventIdMap[id] = eventId
 
-    def registItemHandler(self, ctrl, eventType, eventId):
+    def registItemHandler(self, ctrl, eventId,eventType,eventTypeName=''):
+        self.eventTypeNameMap[eventType.typeId] = eventTypeName
         ctrl.Bind(eventType, self.OnItemEvent, id = eventId)
 
-    def updateResult(self, resultList):
+    def updateResult(self, valueList):
         global gControlRegister
         for item in self.valueItems:
             if item['type'] in gControlRegister.keys():
                 item['value'] = gControlRegister[item['type']].onGetValue(item)
                 if item['value'] is not None:
-                    resultList[item['id']] = {'value':item['value'], 'type':item['type']}
+                    valueList[item['id']] = item['value']
 
     def setItemValue(self,itemId, value):
         if itemId not in self.id2CtrlMap.keys():
@@ -118,20 +120,16 @@ class WindowControl():
                     panel.noteboolCtrl.SetSelection(panel.panelIndex)
                 ctrl.SetFocus()
 
-    def makeReturnPara(self, id):
-        para = {}
-        para['id'] = id
-        resultList = {}
-        self.updateResult(resultList)
-        para['result_list'] = resultList
-        para['handler'] = None
+    def makeReturnPara(self, eventId, eventType,handler):
+        para = HandlerPara(eventId, eventType,handler)
+        self.updateResult(para.valueList)
         return  para
 
     def OnItemEvent(self, event):
         if event.Id in self.eventId2IdMap.keys():
             id = self.eventId2IdMap[event.Id]
             if id != None and id != '':
-                self.window.CallFormHandler(id)
+                self.window.CallFormHandler(id,self.eventTypeNameMap[event.EventType])
 
 class CtrlBase():
     def __init__(self,windowControl,form):
@@ -257,7 +255,7 @@ class CtrlBase():
         else:
             menuItem = wx.MenuItem(currentMenu, eventId, menuInfo.title, menuInfo.hint)
             self.windowControl.registItem(menuInfo.id, eventId, None, menuItem)
-            self.windowControl.registItemHandler(self, wx.EVT_MENU, eventId)
+            self.windowControl.registItemHandler(self, eventId, wx.EVT_MENU, 'evt_menu')
             return menuItem,'item'
 
     def updateMenuEnable(self, menuInfo):
@@ -365,6 +363,22 @@ class FormCtrl(CtrlBase):
             self.SetMenuBar(None)
         self.Layout()
 
+class HandlerPara():
+    def __init__(self, eventId,eventType,handler):
+        self.valueList = {}
+        self.eventId = eventId
+        self.eventType = eventType
+        self.handler = handler
+
+    def getValue(self,id):
+        if id in self.valueList.keys():
+            return self.valueList[id]
+        return None
+    def getEventId(self):
+        return self.eventId
+    def getEventType(self):
+        return self.eventType
+
 class WindowHandler():
     def __init__(self, window):
         self.window = window
@@ -439,7 +453,7 @@ class WindowHandler():
                 except Queue.Empty:
                     pass
                 waitQueue.task_done()
-        return workThread.returnState, workThread.resultList
+        return workThread.returnState, workThread.valueList
     def messageBox(self,message, caption):
         para = {}
         para['message'] = message

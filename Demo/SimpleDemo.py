@@ -18,9 +18,8 @@ builder = Builder()
 builder.loadLayout('SimpleDemo.xml')
 
 #Setup Handler
-def OkButtonHandler(windowHandler, para):
-    resultList = para['result_list']
-    print resultList['id_text']['value']
+def OkButtonHandler(windowHandler, handlerPara):
+    print handlerPara.getValue('id_text')
     windowHandler.closeWindow()
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 

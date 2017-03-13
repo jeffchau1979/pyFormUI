@@ -23,54 +23,54 @@ builder = Builder()
 builder.loadLayout(os.path.split(os.path.realpath(__file__))[0] + os.path.sep + 'findgui.xml')
 
 #setup Handler
-def OkButtonHandler(windowHandler, para):
-    resultList = para['result_list']
+def OkButtonHandler(windowHandler, handlerPara):    
     cmd = ""
-    if resultList['id_search_type']['value'] == "Default":
+    id_search = handlerPara.getValue('id_search')
+    if handlerPara.getValue('id_search_type') == "Default":
         cmd = cmd + " -name "
-    elif resultList['id_search_type']['value'] == "Ignore Case":
+    elif handlerPara.getValue('id_search_type') == "Ignore Case":
         cmd = cmd + " -iname "
-    elif resultList['id_search_type']['value'] == "Full Path":
+    elif handlerPara.getValue('id_search_type') == "Full Path":
         cmd = cmd + " -path "
-        if not '*' in resultList['id_search']['value']:
-            resultList['id_search']['value'] = "*" + resultList['id_search']['value'] + '*'
-    cmd = cmd + "'" + resultList['id_search']['value'] + "'"
+        if not '*' in handlerPara.getValue('id_search'):
+            id_search = "*" + handlerPara.getValue('id_search') + '*'
+    cmd = cmd + "'" + id_search + "'"
 
-    if resultList['id_size_large']['value'] != "":
-        cmd = cmd + " -size  +" + resultList['id_size_large']['value'] + resultList['id_size_large_unit']['value']
-    if resultList['id_size_small']['value'] != "":
-        cmd = cmd + " -size  -" + resultList['id_size_small']['value'] + resultList['id_size_small_unit']['value']
+    if handlerPara.getValue('id_size_large') != "":
+        cmd = cmd + " -size  +" + handlerPara.getValue('id_size_large') + handlerPara.getValue('id_size_large_unit')
+    if handlerPara.getValue('id_size_small') != "":
+        cmd = cmd + " -size  -" + handlerPara.getValue('id_size_small') + handlerPara.getValue('id_size_small_unit')
 
-    if resultList['id_modify_after']['value'] != "":
-        if resultList['id_modify_after_unit']['value'] == 'day':
-            cmd = cmd + " -mtime +" + resultList['id_modify_after']['value']
-        elif resultList['id_modify_after_unit']['value'] == 'min':
-            cmd = cmd + " -mmin +" + resultList['id_modify_after']['value']
+    if handlerPara.getValue('id_modify_after') != "":
+        if handlerPara.getValue('id_modify_after_unit') == 'day':
+            cmd = cmd + " -mtime +" + handlerPara.getValue('id_modify_after')
+        elif handlerPara.getValue('id_modify_after_unit') == 'min':
+            cmd = cmd + " -mmin +" + handlerPara.getValue('id_modify_after')
 
-    if resultList['id_access_after']['value'] != "":
-        if resultList['id_access_after_unit']['value'] == 'day':
-            cmd = cmd + " -mtime +" + resultList['id_access_after']['value']
-        elif resultList['id_access_after_unit']['value'] == 'min':
-            cmd = cmd + " -mmin +" + resultList['id_access_after']['value']
+    if handlerPara.getValue('id_access_after') != "":
+        if handlerPara.getValue('id_access_after_unit') == 'day':
+            cmd = cmd + " -mtime +" + handlerPara.getValue('id_access_after')
+        elif handlerPara.getValue('id_access_after_unit') == 'min':
+            cmd = cmd + " -mmin +" + handlerPara.getValue('id_access_after')
 
-    if resultList['id_type']['value'] != "any":
+    if handlerPara.getValue('id_type') != "any":
         valueMap = {}
         valueMap['file'] = 'f'
         valueMap['directory'] = 'd'
 
-        cmd = cmd + " -type " + valueMap[resultList['id_type']['value']]
+        cmd = cmd + " -type " + valueMap[handlerPara.getValue('id_type')]
 
-    if resultList['id_excute']['value'] != "":
-        cmd = cmd + " -exec "+resultList['id_excute']['value']+" {} \;"
+    if handlerPara.getValue('id_excute') != "":
+        cmd = cmd + " -exec "+handlerPara.getValue('id_excute')+" {} \;"
 
-    if resultList['id_search_text']['value'] != "":
-        cmd = cmd + " |xargs grep " + resultList['id_search_text']['value']
+    if handlerPara.getValue('id_search_text') != "":
+        cmd = cmd + " |xargs grep " + handlerPara.getValue('id_search_text')
 
-    if resultList['id_save_file']['value'] != "":
-        cmd = cmd + "  > " + resultList['id_save_file']['value']
+    if handlerPara.getValue('id_save_file') != "":
+        cmd = cmd + "  > " + handlerPara.getValue('id_save_file')
 
     windowHandler.closeWindow()
-    paths = resultList['id_path']['value']
+    paths = handlerPara.getValue('id_path')
     paths = paths.split('\n')
     for path in paths:
         if path != '':
@@ -81,8 +81,8 @@ def OkButtonHandler(windowHandler, para):
 builder.setCtrlHandler('id_btn_search', OkButtonHandler)
 
 def GuiFind():
-    resultList = FormUI.loadCachedValue(os.path.expanduser('~') + ".findgui.cfg")
-    builder.updateValue(resultList)
+    valueList = FormUI.loadCachedValue(os.path.expanduser('~') + ".findgui.cfg")
+    builder.updateValue(valueList)
     #builder.setValue('id_search_text','')
     formUI = FormUI(builder)
     formUI.show()

@@ -32,7 +32,7 @@ class Frame(wx.Frame,FormCtrl):
               style=wx.DEFAULT_FRAME_STYLE & ~ wx.MAXIMIZE_BOX, title=self.form.title)
         self.SetClientSize(wx.Size(self.form.windowWidth, self.form.windowHeight))
         self.Center(wx.BOTH)
-        self.update(None, True)
+        self.update(self.builder, True)
         self.windowHandler = WindowHandler(self)
         self.windowInit = False
 
@@ -48,7 +48,7 @@ class Frame(wx.Frame,FormCtrl):
         menuBar.Destroy()
 
     def __init__(self, parent, builder,workQueue):
-        self.resultList = {}
+        self.valueList = {}
         self.idPanelMap = {}
         self.initSuccess = True
         self.initDefaultSize(builder,parent)
@@ -74,6 +74,8 @@ class Frame(wx.Frame,FormCtrl):
                 self.initWindowPara()
          if self.windowInit is False:
              self.DestroyForm()
+         for (k,v) in builder.ctrlRegist.items():
+             gControlRegister[k] = v
          self.windowControl = WindowControl(self.builder.handlerMap, self)
          self.showMainForm()
 
@@ -87,19 +89,17 @@ class Frame(wx.Frame,FormCtrl):
             wx.GetApp().SetTopWindow(form)
             workThread.start()
 
-    def CallFormHandler(self, id):
+    def CallFormHandler(self, id,eventType):
         if self.workQueue is not None:
             ctrlHandler = None
             if id in self.windowControl.handlerMap.keys():
                 ctrlHandler = self.windowControl.handlerMap[id]
             if ctrlHandler is not None or self.builder.defaultHandler is not None:
                if ctrlHandler is not None:
-                   para = self.windowControl.makeReturnPara(id)
-                   para['handler'] = ctrlHandler
+                   para = self.windowControl.makeReturnPara(id,eventType,ctrlHandler)
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
                if  self.builder.defaultHandler is not None:
-                   para = self.windowControl.makeReturnPara(id)
-                   para['handler'] = self.builder.defaultHandler
+                   para = self.windowControl.makeReturnPara(id,eventType,self.builder.defaultHandler)
                    self.workQueue.put([EVENT_TYPE_WINDOW_CONTROL, self.windowHandler, para], block=True, timeout=None)
 
                return True

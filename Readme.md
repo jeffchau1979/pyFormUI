@@ -48,9 +48,8 @@ formUI.show()
 
 ####3.Add handler for button or other controls
 ```python
-def OkButtonHandler(windowHandler, para):
-    resultList = para['result_list']
-    print resultList['id_text']['value']
+def OkButtonHandler(windowHandler, handlerPara):
+    print handlerPara.getValue('id_text')
     windowHandler.closeWindow()
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 ```

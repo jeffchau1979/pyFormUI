@@ -25,20 +25,21 @@ builder = Builder()
 builder.loadLayout('demo.xml')
 
 #Setup Handler
-def OkButtonHandler(windowHandler, para):
-    resultList = para['result_list']
-    for k, v in resultList.iteritems():
+def OkButtonHandler(windowHandler, handlerPara):
+    print(handlerPara.getEventId() + ":" + handlerPara.getEventType())
+    valueList = handlerPara.valueList
+    for k, v in valueList.iteritems():
         print "result[%s]=" % k, v
     windowHandler.update(builder,True)
     windowHandler.closeWindow()
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 
-def cancelButtonHandler(windowHandler, para):
+def cancelButtonHandler(windowHandler, handlerPara):
     windowHandler.closeWindow()
 builder.setCtrlHandler('id_cancel', cancelButtonHandler)
 
 
-def button_handler(windowHandler, para):
+def button_handler(windowHandler, handlerPara):
     #windowHandler.setValue('id_text', 'button onclick')
     #ret = windowHandler.confirmMessageBox("ok button click", "title")
     #windowHandler.enableCtrl('id_multi_files', False)
@@ -49,24 +50,26 @@ builder.setCtrlHandler('id_button', button_handler)
 
 builderFind = Builder()
 builderFind.loadLayout('findgui.xml')
-def findOk(windowHandler, para):
-    resultList = para['result_list']
-    cmd = ""
+def findOk(windowHandler, handlerPara):
     windowHandler.closeWindow()
 builderFind.setCtrlHandler('id_btn_search', findOk)
 
-def button_findgui_handler(windowHandler, para):
-    state, resultList = windowHandler.showForm(builderFind,True)
-    print resultList
+def button_findgui_handler(windowHandler, handlerPara):
+    state, valueList = windowHandler.showForm(builderFind,True)
+    print valueList
 builder.setCtrlHandler('id_button_findgui', button_findgui_handler)
 
-def menu_handler(windowHandler, para):
+def menu_handler(windowHandler, handlerPara):
     windowHandler.closeWindow()
 builder.setCtrlHandler('id_menu', menu_handler)
 
+def onlist(windowHandler, handlerPara):
+    print(handlerPara.getEventType()+":" +handlerPara.getValue('id_list'))
+builder.setCtrlHandler('id_list', onlist)
+
 #Show FormUI
-resultList = FormUI.loadCachedValue(os.path.expanduser('~') + "/.demo.cfg")
-builder.updateValue(resultList)
+valueList = FormUI.loadCachedValue(os.path.expanduser('~') + "/.demo.cfg")
+builder.updateValue(valueList)
 formUI = FormUI(builder)
 formUI.show()
 formUI.saveCachedValue(os.path.expanduser('~') + "/.demo.cfg")

@@ -46,7 +46,7 @@ class FormUI():
         queue = Queue.Queue(30)
         uiThread = UIThread(self.builder, queue)
         uiThread.start()
-        self.returnState, self.resultList = workThreadRunnable(queue)
+        self.returnState, self.valueList = workThreadRunnable(queue)
 
     @staticmethod
     def getUUIDString():
@@ -64,15 +64,16 @@ class FormUI():
             print "read value configure file fail!"
         return cachedValue
 
-    def saveCachedValue(self, cachedValueFile, resultList = None):
-        if resultList is None and self.returnState:
-            resultList = self.resultList
-        if resultList is None:
+    def saveCachedValue(self, cachedValueFile, valueList = None):
+        if valueList is None and self.returnState:
+            valueList = self.valueList
+        if valueList is None:
             return
         try:
-            jsonContent = json.dumps(resultList)
+            jsonContent = json.dumps(valueList)
             fileHandle = open(cachedValueFile, 'w')
             fileHandle.write(jsonContent)
             fileHandle.close()
         except IOError as err:
             print "write value configure file fail"
+

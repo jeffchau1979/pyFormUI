@@ -33,7 +33,7 @@ EVENT_WORKTHREAD_SHOWFORM = 12
 def workThreadRunnable(workQueue):
         thread_stop = False
         returnState = False
-        resultList= {}
+        valueList= {}
         while not thread_stop:
             try:
                 task = workQueue.get(block=True)
@@ -44,27 +44,26 @@ def workThreadRunnable(workQueue):
             windowHandler = task[1]
             para = task[2]
             if eventType == EVENT_TYPE_WINDOW_CONTROL:
-                if 'handler' in para.keys():
-                    para['handler'](windowHandler,para)
+                para.handler(windowHandler,para)
                     #windowHandler.taskDone()
-                    if windowHandler.windowClosed:
-                        returnState = windowHandler.returnOk
-                        resultList = para['result_list']
+                if windowHandler.windowClosed:
+                    returnState = windowHandler.returnOk
+                    valueList = para.valueList
             elif  eventType == EVENT_TYPE_APP_CLOSE:
                 break
             else:
                 continue
 
             workQueue.task_done()
-        return  returnState, resultList
+        return  returnState, valueList
 
 class SubFormThread(threading.Thread):
     def __init__(self, waitQueue):
         threading.Thread.__init__(self)
         self.queue = Queue(30)
         self.returnState = False
-        self.resultList = {}
+        self.valueList = {}
         self.waitQueue = waitQueue
     def run(self):
-        self.returnState, self.resultList = workThreadRunnable(self.queue)
+        self.returnState, self.valueList = workThreadRunnable(self.queue)
         self.waitQueue.put([EVENT_TYPE_SUB_FORM_CLOSE, None, None], block=True, timeout=None)

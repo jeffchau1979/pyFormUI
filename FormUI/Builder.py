@@ -211,6 +211,7 @@ class Builder():
         self.__idMap = {}
 
         self.blockWhenIdError = True
+        self.ctrlRegist = {}
 
     def setDefaultHandler(self, handler):
         self.defaultHandler =handler
@@ -266,8 +267,8 @@ class Builder():
                     ret = item
                     break
         return  ret
-    def updateValue(self, resultList):
-        for (k, v) in resultList.items():
+    def updateValue(self, valueList):
+        for (k, v) in valueList.items():
             self.setCtrlAttribute(k,'value', v['value'])
 
     def copy(self):
@@ -389,3 +390,6 @@ class Builder():
             if self.form.menubar == None:
                 self.form.menubar = Menu('')
             self.__xmlAddMenu(self.form.menubar, menubarNode)
+
+    def registControl(self, ctrlName, ctrlRegist):
+        self.ctrlRegist[ctrlName] = ctrlRegist

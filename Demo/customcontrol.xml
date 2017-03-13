@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<form title="Demo GUI" width='500' height='150'>
+   <line>
+        <static title="Text:" width='50' />
+        <text id='id_text'/>
+   </line>
+   <line>
+        <custom_ctrl id='id_custom_ctrl' value="TestTeset"/>
+   </line>
+   <line align="right">
+        <button id='id_ok' title='Ok'/>
+   </line>
+</form>

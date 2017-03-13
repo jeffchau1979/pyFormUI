@@ -29,7 +29,9 @@
             <check_list id='id_check_list' choices="apple[semicolon]orange;peach;pear"  value="apple[semicolon]orange;peach;pear" height="140"/>
             <radio_box id='id_radio_box' choices="apple;orange;peach;pear"  value="orange" height="140" columns="2"/>
         </line>
-
+        <line>
+            <list id='id_list' choices="apple[semicolon]orange;peach;pear"  value="apple[semicolon]orange;peach;pear" height="140"/>
+        </line>
         <line>
             <check id='id_check' title='Check' value="true"/>
         </line>
