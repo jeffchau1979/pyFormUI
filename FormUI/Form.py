@@ -217,8 +217,9 @@ class CtrlBase():
                 self.createPanel(line)
             if isinstance(line, Notebook):
                 self.createNotebook(line)
-        self.SetSizer(self.windowSizer)
+        self.SetSizer(self.windowSizer,True)
         self.SetAutoLayout(1)
+        self.Layout()
         if isinstance(self, PanelCtrl):
             self.SetupScrolling()
 
