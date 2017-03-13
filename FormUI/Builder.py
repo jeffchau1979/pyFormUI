@@ -269,7 +269,7 @@ class Builder():
         return  ret
     def updateValue(self, valueList):
         for (k, v) in valueList.items():
-            self.setCtrlAttribute(k,'value', v['value'])
+            self.setCtrlAttribute(k,'value', v)
 
     def copy(self):
         return copy.deepcopy(self)
