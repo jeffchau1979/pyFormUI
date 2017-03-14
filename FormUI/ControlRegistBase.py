@@ -10,16 +10,14 @@
 ## along with AndBug.  If not, see <http://www.gnu.org/licenses/>.
 
 from CustomControl import *
-import wx.lib.scrolledpanel as scrolled
+
 import wx.lib.filebrowsebutton
-
-
-class CtrlRegistBase():
+class ControlRegistBase():
     @staticmethod
     def makeCommonPara(item,parent):
         itemWidth = int(item['width'])
         itemHeight = int(item['height'])
-        align = CtrlRegistBase.getAlign(item)
+        align = ControlRegistBase.getAlign(item)
 
         para ={}
         para['size'] = wx.Size(itemWidth, itemHeight)
@@ -40,15 +38,34 @@ class CtrlRegistBase():
             return labelText
 
     @staticmethod
+    def convertList(item):
+        if isinstance(item, list):
+            return item
+        strList = item.split(';')
+        retList = []
+        for item in strList:
+            retList.append(item.replace('[semicolon]', ';'))
+        return retList
+
+    @staticmethod
+    def conventBool(item):
+        if isinstance(item,bool):
+            return item
+        return str(item).lower() == 'true'
+
+    @staticmethod
     def getAlign(item):
         if 'align' in item.keys():
-            alignText = getItemValue(item,'align','left')
+            align = getItemValue(item,'align','left')
+            alignText = str(align)
             if alignText == 'center':
                 return  wx.ALIGN_CENTER
             elif alignText == 'right':
                 return  wx.ALIGN_RIGHT
             elif alignText == 'left' :
                 return  wx.ALIGN_LEFT
+            else:
+                return align
         return 0
 
     @staticmethod

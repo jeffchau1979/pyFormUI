@@ -44,6 +44,7 @@ def button_handler(windowHandler, handlerPara):
     #ret = windowHandler.confirmMessageBox("ok button click", "title")
     #windowHandler.enableCtrl('id_multi_files', False)
     #windowHandler.highlightItem('id_multi_files')
+    #builder.setCtrlAttribute('id_text','width',100)
     builder.setCtrlAttribute('id_text', 'value', 'update builder')
     windowHandler.update(builder,True)
 builder.setCtrlHandler('id_button', button_handler)

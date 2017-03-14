@@ -12,25 +12,25 @@
 from CustomControl import *
 import wx.lib.scrolledpanel as scrolled
 import wx.lib.filebrowsebutton
-from ControlRegisterBase import *
+from ControlRegistBase import *
 
 global gControlRegister
 gControlRegister = {}
-class StaticRegist(CtrlRegistBase):
+class StaticRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        para['label'] =  CtrlRegistBase.getLable(item)
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['label'] =  ControlRegistBase.getLable(item)
         itemCtrl = wx.StaticText(**para)
         return itemCtrl
 gControlRegister['static'] = StaticRegist
 
 
-class ChoiseRegist(CtrlRegistBase):
+class ChoiseRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item, parent)
-        para['choices'] =  getItemValue(item, 'choices', [])
+        para = ControlRegistBase.makeCommonPara(item, parent)
+        para['choices'] =  ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         itemCtrl = wx.Choice(**para)
         value = getItemValue(item, 'value', '')
         windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_CHOICE,'evt_choice')
@@ -42,17 +42,17 @@ class ChoiseRegist(CtrlRegistBase):
 
     @staticmethod
     def onSetValue(item,value):
-        index = getItemValue(item, 'choices', []).index(value)
+        index = ControlRegistBase.convertList(getItemValue(item, 'choices', [])).index(value)
         if index >= 0:
             item['control'].Select(index)
 
 gControlRegister['choise'] = ChoiseRegist
 
 
-class TextRegist(CtrlRegistBase):
+class TextRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         if 'multi_line' in item.keys() and getItemValue(item, 'multi_line') == 'true':
             para['style'] = para['style'] | wx.TE_MULTILINE
         if 'password' in item.keys() and getItemValue(item, 'password') == 'true':
@@ -63,21 +63,21 @@ class TextRegist(CtrlRegistBase):
 gControlRegister['text'] = TextRegist
 
 
-class StaticLineRegist(CtrlRegistBase):
+class StaticLineRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        para['label'] = CtrlRegistBase.getLable(item)
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['label'] = ControlRegistBase.getLable(item)
         itemCtrl = StaticLine(**para)
         return itemCtrl
 gControlRegister['static_line'] = StaticLineRegist
 
 
-class CheckListRegist(CtrlRegistBase):
+class CheckListRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        choices = getItemValue(item, 'choices', [])
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         para['choices'] = choices
         itemCtrl = wx.CheckListBox(**para)
         windowControl.registItemHandler(itemCtrl, para['id'], wx.EVT_CHECKLISTBOX,'evt_checklistbox')
@@ -86,13 +86,14 @@ class CheckListRegist(CtrlRegistBase):
     def onGetValue(item):
         checked_list = item['control'].GetChecked()
         value = []
-        choices = getItemValue(item, 'choices', [])
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         for index in checked_list:
             value.append(choices[index])
         return value
     @staticmethod
     def onSetValue(item,value):
-        choices = getItemValue(item, 'choices', [])
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
+        value = ControlRegistBase.convertList(value)
         if len(choices) < 1:
             return
         default_check = []
@@ -104,11 +105,11 @@ class CheckListRegist(CtrlRegistBase):
         item['control'].SetChecked(default_check)
 gControlRegister['check_list'] = CheckListRegist
 
-class ListRegist(CtrlRegistBase):
+class ListRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        choices = getItemValue(item, 'choices', [])
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         para['choices'] = choices
         itemCtrl = wx.ListBox(**para)
         windowControl.registItemHandler(itemCtrl, para['id'], wx.EVT_LISTBOX,'evt_listbox')
@@ -119,17 +120,17 @@ class ListRegist(CtrlRegistBase):
         return item['control'].GetStringSelection()
     @staticmethod
     def onSetValue(item,value):
-        choices = getItemValue(item, 'choices', [])
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         if value in choices:
             index = choices.index(value)
             item['control'].SetSelection(index)
 gControlRegister['list'] = ListRegist
 
-class RadioBoxRegist(CtrlRegistBase):
+class RadioBoxRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        choices = getItemValue(item, 'choices', [])
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         para['choices'] = choices
         para['majorDimension'] = int(getItemValue(item, 'columns', '1'))
         para['style'] = para['style'] | wx.RA_SPECIFY_COLS
@@ -141,18 +142,18 @@ class RadioBoxRegist(CtrlRegistBase):
         return item['control'].GetStringSelection()
     @staticmethod
     def onSetValue(item,value):
-        choices = getItemValue(item, 'choices', [])
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         if value in choices:
             index = choices.index(value)
             item['control'].SetSelection(index)
 gControlRegister['radio_box'] = RadioBoxRegist
 
 
-class CheckRegist(CtrlRegistBase):
+class CheckRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        para['label'] = CtrlRegistBase.getLable(item)
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['label'] = ControlRegistBase.getLable(item)
         itemCtrl = wx.CheckBox(**para)
         windowControl.registItemHandler(itemCtrl, para['id'], wx.EVT_CHECKBOX,'evt_checkbox')
         return itemCtrl
@@ -161,22 +162,22 @@ class CheckRegist(CtrlRegistBase):
         return 'true' if item['control'].GetValue() else 'false'
     @staticmethod
     def onSetValue(item,value):
-        if value == 'true':
+        if ControlRegistBase.conventBool(value):
             item['control'].SetValue(True)
         else:
             item['control'].SetValue(False)
 gControlRegister['check'] = CheckRegist
 
 
-class ComboBoxRegist(CtrlRegistBase):
+class ComboBoxRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        choices = getItemValue(item, 'choices', [])
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
         para['choices'] = choices
         itemCtrl = wx.ComboBox(**para)
         value = getItemValue(item, 'value', '')
-        if value == 'true':
+        if ControlRegistBase.conventBool(value):
             itemCtrl.SetValue(value)
         elif len(choices) > 0:
             itemCtrl.SetValue(choices[0])
@@ -184,10 +185,10 @@ class ComboBoxRegist(CtrlRegistBase):
 gControlRegister['combo_box'] = ComboBoxRegist
 
 
-class DateRegist(CtrlRegistBase):
+class DateRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['style'] = para['style'] | wx.DP_SHOWCENTURY | wx.DP_DEFAULT
         itemCtrl = wx.DatePickerCtrl(**para)
         return itemCtrl
@@ -203,10 +204,10 @@ class DateRegist(CtrlRegistBase):
 gControlRegister['date'] = DateRegist
 
 
-class TimeRegist(CtrlRegistBase):
+class TimeRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['display_seconds'] = True
         para['fmt24hr'] = True
         para['oob_color'] = wx.NamedColour('Yellow')
@@ -219,10 +220,10 @@ class TimeRegist(CtrlRegistBase):
 gControlRegister['time'] = TimeRegist
 
 
-class DateTimeRegist(CtrlRegistBase):
+class DateTimeRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         itemCtrl =  DateTime(**para)
         value = getItemValue(item, 'value', '')
         if value != "":
@@ -231,32 +232,32 @@ class DateTimeRegist(CtrlRegistBase):
 gControlRegister['datetime'] = DateTimeRegist
 
 
-class ButtonRegist(CtrlRegistBase):
+class ButtonRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
-        para['label'] = CtrlRegistBase.getLable(item)
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['label'] = ControlRegistBase.getLable(item)
         itemCtrl =  wx.Button(**para)
         windowControl.registItemHandler(itemCtrl, para['id'], wx.EVT_BUTTON,'evt_button')
         return itemCtrl
 gControlRegister['button'] = ButtonRegist
 
 
-class FileRegist(CtrlRegistBase):
+class FileRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['buttonText'] = 'Browse'
         para['dialogTitle'] = 'Choose a file'
         para['fileMask'] = getItemValue(item, 'mark', "*.*")
-        para['labelText'] = CtrlRegistBase.getLable(item)
+        para['labelText'] = ControlRegistBase.getLable(item)
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         para['startDirectory'] = '.'
         para['fileMode'] = wx.SAVE
         para['toolTip'] = 'Type filename or click browse to choose file'
         if 'choices' in item.keys():
             itemCtrl =  wx.lib.filebrowsebutton.FileBrowseButtonWithHistory(**para)
-            itemCtrl.SetHistory(getItemValue(item, 'choices'))
+            itemCtrl.SetHistory(ControlRegistBase.convertList(getItemValue(item, 'choices')))
         else:
             itemCtrl = wx.lib.filebrowsebutton.FileBrowseButton(**para)
         windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_BUTTON,'evt_button')
@@ -264,13 +265,13 @@ class FileRegist(CtrlRegistBase):
 gControlRegister['file'] = FileRegist
 
 
-class FolderRegist(CtrlRegistBase):
+class FolderRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         value = getItemValue(item, 'value', '')
         para['dialogTitle'] = 'Choose a folder'
-        para['labelText'] = CtrlRegistBase.getLable(item)
+        para['labelText'] = ControlRegistBase.getLable(item)
         para['startDirectory'] = value
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         itemCtrl =   wx.lib.filebrowsebutton.DirBrowseButton(**para)
@@ -278,13 +279,13 @@ class FolderRegist(CtrlRegistBase):
 gControlRegister['folder'] = FolderRegist
 
 
-class FolderRegist(CtrlRegistBase):
+class FolderRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         value = getItemValue(item, 'value', '')
         para['dialogTitle'] = 'Choose a folder'
-        para['labelText'] = CtrlRegistBase.getLable(item)
+        para['labelText'] = ControlRegistBase.getLable(item)
         para['startDirectory'] = value
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         itemCtrl =   wx.lib.filebrowsebutton.DirBrowseButton(**para)
@@ -293,10 +294,10 @@ class FolderRegist(CtrlRegistBase):
 gControlRegister['folder'] = FolderRegist
 
 
-class MultiFilesRegist(CtrlRegistBase):
+class MultiFilesRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['mask'] = getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = True
         para['bAddFolder'] = False
@@ -306,10 +307,10 @@ class MultiFilesRegist(CtrlRegistBase):
 gControlRegister['multi_files'] = MultiFilesRegist
 
 
-class MultiFoldersRegist(CtrlRegistBase):
+class MultiFoldersRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['mask'] = getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = False
         para['bAddFolder'] = True
@@ -319,10 +320,10 @@ class MultiFoldersRegist(CtrlRegistBase):
 gControlRegister['multi_folders'] = MultiFoldersRegist
 
 
-class MultiFolersFilesRegist(CtrlRegistBase):
+class MultiFolersFilesRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         para['mask'] = getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = True
         para['bAddFolder'] = True

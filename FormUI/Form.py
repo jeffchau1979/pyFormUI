@@ -11,8 +11,9 @@
 #from CommonCtrl import *
 import wx.lib.filebrowsebutton
 import Queue
-from ControlRegister import  *
+from ControlRegist import  *
 from WorkThread import *
+from Builder import *
 
 EVT_RESULT_ID = wx.NewId()
 
@@ -431,7 +432,6 @@ class WindowHandler():
         para['value'] = value
         para['event'] = EVENT_WORKTHREAD_ITEM_SET_VALUE
         wx.PostEvent(self.window, ResultEvent(para))
-
 
     def update(self, builder, updateWindow=True):
         para = {}

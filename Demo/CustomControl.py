@@ -24,10 +24,10 @@ def OkButtonHandler(windowHandler, handlerPara):
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 
 
-class CustomCtrlRegist(CtrlRegistBase):
+class CustomCtrlRegist(ControlRegistBase):
     @staticmethod
     def onCreate(item, parent, windowControl):
-        para = CtrlRegistBase.makeCommonPara(item,parent)
+        para = ControlRegistBase.makeCommonPara(item,parent)
         if 'multi_line' in item.keys() and getItemValue(item, 'multi_line') == 'true':
             para['style'] = para['style'] | wx.TE_MULTILINE
         if 'password' in item.keys() and getItemValue(item, 'password') == 'true':

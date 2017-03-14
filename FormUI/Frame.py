@@ -12,6 +12,7 @@
 from Form import *
 import Queue
 from WorkThread import *
+from Builder import *
 
 def create(parent, builder, workQueue):
     return Frame(parent,builder, workQueue)

@@ -15,11 +15,10 @@ from xml.dom.minidom import parse
 import xml.dom.minidom
 import  wx
 
-def convertBool(value):
-    if isinstance(value, (str, unicode)):
-        return value.lower() == 'true'
-    else:
-        return value
+def convertBool(item):
+    if isinstance(item, bool):
+        return item
+    return str(item).lower() == 'true'
 
 class Form():
     def __init__(self):
@@ -75,7 +74,7 @@ class Form():
             fixHeight = fixHeight + Builder.DEFAULT_MENUBAR_HEIGHT
         fixLineCount = 0
         for line in self.lines:
-            line.format(builder)
+            line.format(builder, self.windowWidth)
             if line.height > 0:
                 fixHeight = fixHeight + line.height + Builder.DEFAULT_LINE_HEIGHT_SPACE
                 fixLineCount = fixLineCount + 1
@@ -97,9 +96,9 @@ class Notebook():
     def setCtrlAttribute(self, paraName, paraValue):
         if paraName == 'height':
             self.height = int(paraValue)
-    def format(self,builder):
+    def format(self,builder,lineWidth):
         for panel in self.panels:
-            panel.format(builder)
+            panel.format(builder, lineWidth)
 
 class Panel():
     def __init__(self, panelId):
@@ -124,9 +123,10 @@ class Panel():
             self.height = int(paraValue)
     def getLines(self):
         return  self.lines
-    def format(self,builder):
+    def format(self,builder,lineWidth):
+        self.width = lineWidth
         for line in self.lines:
-            line.format(builder)
+            line.format(builder, self.width - Builder.DEFAULT_LINE_WIDTH_EDGE*2)
 
 class Line():
     def __init__(self, lineId):
@@ -149,7 +149,7 @@ class Line():
             self.enable = convertBool(paraValue)
         elif paraName == 'height':
             self.height = int(paraValue)
-    def format(self,builder):
+    def format(self,builder, lineWidth):
         fixedItemWidth = 0
         fixedItemCount = 0
         for item in self.items:
@@ -166,7 +166,7 @@ class Line():
                 item['visible'] = "true"
 
         if fixedItemCount < len(self.items):
-            spaceWidth = builder.form.windowWidth - fixedItemWidth - Builder.DEFAULT_LINE_WIDTH_EDGE*3
+            spaceWidth = lineWidth - fixedItemWidth - Builder.DEFAULT_LINE_WIDTH_EDGE*2
             itemWidth = spaceWidth / (len(self.items) - fixedItemCount)
             for item in self.items:
                 if not 'width' in item.keys():
@@ -196,7 +196,7 @@ class Builder():
     DEFAULT_LINE_HEIGHT = -1
     DEFAULT_MENUBAR_HEIGHT = -1
     DEFAULT_BUTTON_WIDTH = 100
-    DEFAULT_LINE_WIDTH_EDGE = 5
+    DEFAULT_LINE_WIDTH_EDGE = 6
     DEFAULT_LINE_HEIGHT_SPACE = 5
     def __init__(self):
         self.form = Form()
@@ -221,12 +221,14 @@ class Builder():
             itemList = self.__idMap[id]
             for item in itemList:
                 if isinstance(item, Line)  \
-                    or  isinstance(item, Panel) \
+                    or isinstance(item, Panel) \
                     or isinstance(item, Notebook) \
                     or isinstance(item, Form) \
                     or isinstance(item, Menu):
                     item.setCtrlAttribute(paraName, paraValue)
                 else:
+                    item[paraName] = paraValue
+                    '''
                     if isinstance(paraValue, bool):
                         item[paraName] = 'true' if paraValue else 'false'
                     elif isinstance(paraValue,list):
@@ -240,6 +242,7 @@ class Builder():
                             item[paraName] = self.__getStrList(paraValue)
                         else:
                             item[paraName] = str(paraValue)
+                    '''
 
     def setCtrlHandler(self, Id, handler):
         self.handlerMap[Id] = handler
@@ -292,10 +295,10 @@ class Builder():
         if itemNode.attributes is not None:
             for attr in itemNode.attributes._attrs:
                 item[attr] = itemNode.getAttribute(attr)
-                if attr == 'choices':
-                    item[attr] = self.__getStrList(item[attr])
-                if item['type'] == 'check_list' and attr == 'value':
-                    item[attr] = self.__getStrList(item[attr])
+                #if attr == 'choices':
+                #    item[attr] = self.__getStrList(item[attr])
+                #if item['type'] == 'check_list' and attr == 'value':
+                #    item[attr] = self.__getStrList(item[attr])
         return item
 
     def __xmlAddMenu(self,menu, menuNode):
