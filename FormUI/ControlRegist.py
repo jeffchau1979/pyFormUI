@@ -38,11 +38,13 @@ class ChoiseRegist(ControlRegistBase):
 
     @staticmethod
     def onGetValue(item):
-        return item['choices'][item['control'].GetSelection()]
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
+        return choices[item['control'].GetSelection()]
 
     @staticmethod
     def onSetValue(item,value):
-        index = ControlRegistBase.convertList(getItemValue(item, 'choices', [])).index(value)
+        choices = ControlRegistBase.convertList(getItemValue(item, 'choices', []))
+        index = choices.index(value)
         if index >= 0:
             item['control'].Select(index)
 

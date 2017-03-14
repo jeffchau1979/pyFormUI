@@ -38,14 +38,29 @@ class ControlRegistBase():
             return labelText
 
     @staticmethod
+    def __convertSingleList(item):
+        retList = []
+        strList = item.split(';')
+        for str in strList:
+            str = str.replace('[semicolon]', ';')
+            str = str.replace('[bar]', '|')
+            str = str.replace('[bracketleft]', '[')
+            str = str.replace('[bracketright]', ']')
+            retList.append(str)
+        return retList
+
+    @staticmethod
     def convertList(item):
         if isinstance(item, list):
             return item
-        strList = item.split(';')
         retList = []
-        for item in strList:
-            retList.append(item.replace('[semicolon]', ';'))
-        return retList
+        if item.find('|') >= 0:
+            #multidimensional list
+            lineList = item.split('|')
+            for line in lineList:
+                retList.append(ControlRegistBase.__convertSingleList(line))
+        else:
+            return  ControlRegistBase.__convertSingleList(item)
 
     @staticmethod
     def conventBool(item):
