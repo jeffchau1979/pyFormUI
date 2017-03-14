@@ -335,3 +335,93 @@ class MultiFolersFilesRegist(ControlRegistBase):
             itemCtrl.SetValue(value)
         return itemCtrl
 gControlRegister['multi_folders_files'] = MultiFolersFilesRegist
+
+
+
+class TableRegist(ControlRegistBase):
+    @staticmethod
+    def onCreate(item, parent, windowControl):
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['style'] = para['style'] | wx.LC_REPORT | wx.BORDER_SUNKEN
+        itemCtrl = wx.ListCtrl(**para)
+        tableList = getItemValue(item, 'data', [])
+        columnList = ControlRegistBase.convertList(getItemValue(item, 'columns', []))
+        columnWidthList = ControlRegistBase.convertList(getItemValue(item, 'columns_width', []))
+        columnIndex = 0
+        for column in columnList:
+            width = -1
+            if columnIndex < len(columnWidthList):
+                width = int(columnWidthList[columnIndex])
+            itemCtrl.InsertColumn(columnIndex, column, width=width)
+            columnIndex = columnIndex + 1
+        item['indexMap'] = {}
+        item['idMap'] = {}
+        for line in tableList:
+                index = itemCtrl.GetItemCount()
+                item['indexMap'][index] = line['id']
+                item['idMap'][line['id']] = str(index)
+                lineItems = ControlRegistBase.convertList(line['items'])
+                itemCtrl.InsertStringItem(index, '')
+                columnIndex = 0
+                for lineitem in lineItems:
+                    itemCtrl.SetStringItem(index, columnIndex, lineitem)
+                    columnIndex = columnIndex + 1
+        windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_LIST_ITEM_SELECTED,'evt_list_item_selected')
+        windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_LIST_ITEM_DESELECTED,'evt_list_item_deselected')
+        return itemCtrl
+    @staticmethod
+    def onGetValue(item):
+        select = item['control'].GetFirstSelected()
+        if select < 0:
+            return None
+        ret = []
+        while select >= 0:
+            ret.append( item['indexMap'][select])
+            select = item['control'].GetNextSelected(select)
+        return ret
+    @staticmethod
+    def onSetValue(item,value):
+        valueList = ControlRegistBase.convertList(value)
+        for value in valueList:
+            index = item['idMap'][str(value)]
+            item['control'].SetItemState(long(index), wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
+gControlRegister['table'] = TableRegist
+
+
+class TreeRegist(ControlRegistBase):
+    @staticmethod
+    def AddTree(treeCtrl, parent,Node, idMap):
+        if parent is None:
+            nodeCtrl = treeCtrl.AddRoot(Node['title'])
+        else:
+            nodeCtrl = treeCtrl.AppendItem(parent, Node['title'])
+        treeCtrl.SetItemData(nodeCtrl, wx.TreeItemData(Node['id']))
+        idMap[Node['id']] = nodeCtrl
+        if Node['subNodes'] != []:
+            for subNode in Node['subNodes']:
+                TreeRegist.AddTree(treeCtrl, nodeCtrl, subNode,idMap)
+
+    @staticmethod
+    def onCreate(item, parent, windowControl):
+        para = ControlRegistBase.makeCommonPara(item,parent)
+        para['style'] = para['style'] | wx.TR_HAS_BUTTONS | wx.TR_MULTIPLE
+        itemCtrl = wx.TreeCtrl(**para)
+        treeData = getItemValue(item, 'data', [])
+        item['idMap'] = {}
+        TreeRegist.AddTree(itemCtrl,None, treeData, item['idMap'])
+        windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_TREE_SEL_CHANGED,'evt_tree_sel_changed')
+        return itemCtrl
+    @staticmethod
+    def onGetValue(item):
+        selects = item['control'].GetSelections()
+        ret = []
+        for select in selects:
+            ret.append(item['control'].GetItemData(select).GetData())
+        return ret
+    @staticmethod
+    def onSetValue(item,value):
+        valueList = ControlRegistBase.convertList(value)
+        for value in valueList:
+            valueId = item['idMap'][str(value)]
+            item['control'].SelectItem(valueId)
+gControlRegister['tree'] = TreeRegist

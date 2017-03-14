@@ -68,6 +68,38 @@ def onlist(windowHandler, handlerPara):
     print(handlerPara.getEventType()+":" +handlerPara.getValue('id_list'))
 builder.setCtrlHandler('id_list', onlist)
 
+tableData = []
+def AddTableLine(tableData, id, items):
+    line = {}
+    line['id'] = id
+    line['items'] = items
+    tableData.append(line)
+AddTableLine(tableData,'1',"apple;1;red")
+AddTableLine(tableData,'2',"orange;2;yellow")
+AddTableLine(tableData,'3',"lemon;3;yellow")
+AddTableLine(tableData,'4',"peach;4;pink")
+builder.setCtrlAttribute('id_table','data', tableData)
+
+def AddTreeNode(parent,id,title):
+    node = {}
+    node['id'] = id
+    node['title'] = title
+    node['subNodes'] = []
+    if parent is not None:
+        parent['subNodes'].append(node)
+    return  node
+
+treeData = AddTreeNode(None,'id_node','Node')
+node1 = AddTreeNode(treeData, 'id_node1', 'Node1')
+node2 = AddTreeNode(node1, 'id_node2', 'Node2')
+node21 = AddTreeNode(node1, 'id_node21', 'Node21')
+node22 = AddTreeNode(node1, 'id_node22', 'Node22')
+node3 = AddTreeNode(node1, 'id_node3', 'Node3')
+node4 = AddTreeNode(node3, 'id_node4', 'Node4')
+node41 = AddTreeNode(node3, 'id_node41', 'Node41')
+node42 = AddTreeNode(node3, 'id_node42', 'Node42')
+builder.setCtrlAttribute('id_tree','data', treeData)
+
 #Show FormUI
 valueList = FormUI.loadCachedValue(os.path.expanduser('~') + "/.demo.cfg")
 builder.updateValue(valueList)

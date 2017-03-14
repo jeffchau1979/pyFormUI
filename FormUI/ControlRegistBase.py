@@ -38,7 +38,9 @@ class ControlRegistBase():
             return labelText
 
     @staticmethod
-    def __convertSingleList(item):
+    def convertList(item):
+        if isinstance(item, list):
+            return item
         retList = []
         strList = item.split(';')
         for str in strList:
@@ -47,21 +49,7 @@ class ControlRegistBase():
             str = str.replace('[bracketleft]', '[')
             str = str.replace('[bracketright]', ']')
             retList.append(str)
-        return retList
-
-    @staticmethod
-    def convertList(item):
-        if isinstance(item, list):
-            return item
-        retList = []
-        if item.find('|') >= 0:
-            #multidimensional list
-            lineList = item.split('|')
-            for line in lineList:
-                retList.append(ControlRegistBase.__convertSingleList(line))
-        else:
-            return  ControlRegistBase.__convertSingleList(item)
-
+        return  retList
     @staticmethod
     def conventBool(item):
         if isinstance(item,bool):
