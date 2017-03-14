@@ -101,6 +101,7 @@ class Notebook():
             panel.format(builder, lineWidth)
 
 class Panel():
+    PANEL_EDGE_WIDTH = 1
     def __init__(self, panelId):
         self.panelId = panelId
         self.panelName = ""
@@ -108,6 +109,7 @@ class Panel():
         self.visible = True
         self.enable = True
         self.height = -1
+        self.width = -1
     def addLine(self,line):
         self.lines.append(line)
     def getPanelName(self):
@@ -124,9 +126,10 @@ class Panel():
     def getLines(self):
         return  self.lines
     def format(self,builder,lineWidth):
-        self.width = lineWidth
+        if self.width == -1:
+            self.width = lineWidth
         for line in self.lines:
-            line.format(builder, self.width - Builder.DEFAULT_LINE_WIDTH_EDGE*2)
+            line.format(builder, self.width - Panel.PANEL_EDGE_WIDTH *2)
 
 class Line():
     def __init__(self, lineId):
@@ -196,7 +199,7 @@ class Builder():
     DEFAULT_LINE_HEIGHT = -1
     DEFAULT_MENUBAR_HEIGHT = -1
     DEFAULT_BUTTON_WIDTH = 100
-    DEFAULT_LINE_WIDTH_EDGE = 6
+    DEFAULT_LINE_WIDTH_EDGE = 5
     DEFAULT_LINE_HEIGHT_SPACE = 5
     def __init__(self):
         self.form = Form()
@@ -348,6 +351,7 @@ class Builder():
         self.__addIdMap(panelId, panel)
         panel.panelName = self.__xmlGetAttribute(panelNode, 'name')
         panel.height = int(self.__xmlGetAttribute(panelNode, 'height', -1))
+        panel.width = int(self.__xmlGetAttribute(panelNode, 'width', -1))
         panel.enable = convertBool(self.__xmlGetAttribute(panelNode, 'enable', True))
         panel.visible = convertBool(self.__xmlGetAttribute(panelNode, 'visible', True))
         #self.panels.append(panel)

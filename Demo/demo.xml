@@ -8,7 +8,7 @@
 	</menu>
 </menubar>
 <notebook>
-    <panel name='CommonCtrol'>
+    <panel name='CommonCtrol' width="480">
         <line>
             <static_line align='center' title="Title"/>
         </line>
