@@ -67,7 +67,7 @@
   <panel name='Table_Tree'>
         <line>
             <table id='id_table'
-                   columns="fruit;index;color" columns_width="400;200;100"
+                   columns="fruit;index;color" columns_width="300;150;100"
                    height="200"/>
         </line>
         <line>

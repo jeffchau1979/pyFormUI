@@ -26,6 +26,17 @@
             <datetime id='id_datetime' title='DateTime:' value="2017-02-01 10:01:01"/>
         </line>
     </panel>
+  <panel name='Table_Tree'>
+        <line>
+            <table id='id_table'
+                   columns="fruit;index;color" columns_width="300;150;100"
+                   height="200"/>
+        </line>
+        <line>
+            <tree id='id_tree'
+                   height="200"/>
+        </line>
+    </panel>
 </notebook>
 <line align="right">
     <button id='id_cancel' title='Cancel' width="100"/>
