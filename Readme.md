@@ -73,3 +73,23 @@ Find more Demos in Demo Folder.
   This Demo Implement the GUI for linux find cmd.
   
   <img src="https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/findgui.png">
+
+
+####3.SimpleDemo.py
+```bash
+  python SimpleDemo.py
+```
+
+     A Simple Demo
+   
+####4.CustomControl.py
+```bash
+  python CustomControl.py
+```
+
+     A Demo Show how to add cutom control
+     
+      
+   
+
+
