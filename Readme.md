@@ -9,11 +9,11 @@ pyFormUI provide the most easy way to show a Form Dialog for python,which is bas
 
 Installation
 ------------
-####1.install wxpython
+#### 1.install wxpython
 ```bash
   sudo apt-get install python-wxtools
 ```
-####2.Installation pyFormUI from the source package:
+#### 2.Installation pyFormUI from the source package:
 ```bash
 python setup.py install
 ```
@@ -82,7 +82,7 @@ Find more Demos in Demo Folder.
 
      A Simple Demo
    
-####4.CustomControl.py
+#### 4.CustomControl.py
 ```bash
   python CustomControl.py
 ```
