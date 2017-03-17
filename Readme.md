@@ -24,7 +24,7 @@ Please Find the code of this Example in files Demo/SimpleDemo.py and Demo/Simple
 
 <img src="https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/SimpleDemo.png">
 
-####1.Create GUI by xml
+#### 1.Create GUI by xml
 ```xml
 <?xml version="1.0"?>
 <form title="Demo GUI" width='500' height='100'>
@@ -37,7 +37,7 @@ Please Find the code of this Example in files Demo/SimpleDemo.py and Demo/Simple
    </line>
 </form>
 ```
-####2.Show GUI by xml layout
+#### 2.Show GUI by xml layout
 ```python
 from FormUI import *
 builder = Builder()
@@ -46,7 +46,7 @@ formUI = FormUI(builder)
 formUI.show()
 ```
 
-####3.Add handler for button or other controls
+#### 3.Add handler for button or other controls
 ```python
 def OkButtonHandler(windowHandler, handlerPara):
     print handlerPara.getValue('id_text')
@@ -58,14 +58,14 @@ More Demos
 ------------
 Find more Demos in Demo Folder.
 
-####1.Demo.py
+#### 1.Demo.py
 ```bash
   python Demo.py
 ```
 
   this demo show the basic control of pyFormUI
 
-####2.FindGui.py
+#### 2.FindGui.py
 ```bash
   python FindGui.py
 ```
@@ -75,7 +75,7 @@ Find more Demos in Demo Folder.
   <img src="https://github.com/jeffchau1979/pyFormUI/blob/master/screenshot/findgui.png">
 
 
-####3.SimpleDemo.py
+#### 3.SimpleDemo.py
 ```bash
   python SimpleDemo.py
 ```
@@ -90,6 +90,6 @@ Find more Demos in Demo Folder.
      A Demo Show how to add cutom control
      
       
-   
+
 
 
