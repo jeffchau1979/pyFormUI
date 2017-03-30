@@ -26,7 +26,7 @@ class ControlRegistBase():
         para ={}
         para['size'] = wx.Size(itemWidth, itemHeight)
         para['pos'] = wx.Point(0, 0)
-        para['name'] = getItemValue(item, 'id')
+        para['name'] = BuilderUtil.getItemValue(item, 'id')
         para['parent'] = parent
         para['id'] = wx.NewId()
         item['event_id'] = para['id']
@@ -36,9 +36,9 @@ class ControlRegistBase():
     @staticmethod
     def getLable(item):
         if 'label' in item.keys():
-            labelText = getItemValue(item, 'lable', "")
+            labelText = BuilderUtil.getItemValue(item, 'lable', "")
         elif 'title' in item.keys():
-            labelText = getItemValue(item, 'title', "")
+            labelText = BuilderUtil.getItemValue(item, 'title', "")
             return labelText
 
     @staticmethod
@@ -63,7 +63,7 @@ class ControlRegistBase():
     @staticmethod
     def getAlign(item):
         if 'align' in item.keys():
-            align = getItemValue(item,'align','left')
+            align = BuilderUtil.getItemValue(item,'align','left')
             alignText = str(align)
             if alignText == 'center':
                 return  wx.ALIGN_CENTER

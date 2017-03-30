@@ -14,11 +14,6 @@ import wx.lib.filebrowsebutton
 from Builder import *
 import os
 
-def getItemValue(item, key, defaultValue=""):
-    if key in item.keys():
-        return item[key]
-    else:
-        return defaultValue
 
 def EnableSizer(item, bEnable):
     children = item.GetChildren()

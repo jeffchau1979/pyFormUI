@@ -28,3 +28,10 @@ class BuilderUtil():
         if isinstance(item, bool):
             return item
         return str(item).lower() == 'true'
+
+    @staticmethod
+    def getItemValue(item, key, defaultValue=""):
+        if key in item.keys():
+            return item[key]
+        else:
+            return defaultValue

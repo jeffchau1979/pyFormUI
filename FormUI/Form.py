@@ -148,7 +148,10 @@ class CtrlBase():
             flag = flag | wx.ALIGN_RIGHT
         elif line.align == 'left':
             flag = flag | wx.ALIGN_LEFT
-        self.windowSizer.AddWindow(lineSizer, 0, border=Builder.DEFAULT_LINE_WIDTH_EDGE, flag=flag)
+        proportion = 0
+        if line.expand:
+            proportion = 1
+        self.windowSizer.AddWindow(lineSizer, proportion, border=Builder.DEFAULT_LINE_WIDTH_EDGE, flag=flag)
 #        if line.lineId != "":
 #            self.idLineMap[line.lineId] = lineSizer
         if line.visible == False:
@@ -285,14 +288,14 @@ class LineCtrl(wx.BoxSizer):
         item['control'] = MultiFolderFile(parent=self.parent,
                                    pos=wx.Point(0, 0),
                                    size=wx.Size(itemWidth, itemHeight),
-                                   mask=getItemValue(item, 'mask', '*.*'),
+                                   mask=BuilderUtil.getItemValue(item, 'mask', '*.*'),
                                    bAddFile=bAddFile, bAddFolder=bAddFolder)
         if value != "":
             item['control'].SetValue(value)
         #self.valueItems.append(item)
     def getAlign(self,item):
         if 'align' in item.keys():
-            alignText = getItemValue(item,'align','left')
+            alignText = BuilderUtil.getItemValue(item,'align','left')
             if alignText == 'center':
                 return  wx.ALIGN_CENTER
             elif alignText == 'right':
@@ -300,6 +303,7 @@ class LineCtrl(wx.BoxSizer):
             elif alignText == 'left' :
                 return  wx.ALIGN_LEFT
         return 0
+
     def createItem(self, lineSizer, item):
         global gControlRegister
         if item['type'] in gControlRegister.keys():
@@ -317,7 +321,7 @@ class LineCtrl(wx.BoxSizer):
                 item['control'].Show(True)
 
         if 'enable' in item.keys():
-            if getItemValue(item, 'enable', 'true') == 'true':
+            if BuilderUtil.getItemValue(item, 'enable', 'true') == 'true':
                 item['control'].Enable(True)
             else:
                 item['control'].Enable(False)

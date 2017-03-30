@@ -111,11 +111,13 @@ class Line():
         self.visible = True
         self.enable = True
         self.align = 'left'
+        self.expand = False
         self.height = 0
 
     def addItem(self,item):
         if item is not None:
             self.items.append(item)
+
     def setCtrlAttribute(self, paraName, paraValue):
         if paraName == 'align':
             self.align = str(paraValue)
@@ -125,6 +127,9 @@ class Line():
             self.enable = BuilderUtil.convertBool(paraValue)
         elif paraName == 'height':
             self.height = int(paraValue)
+        elif paraName == 'expand':
+            self.expand = BuilderUtil.convertBool(paraValue)
+
     def format(self,builder, lineWidth):
         for item in self.items:
             if 'height' not in item.keys():
@@ -286,6 +291,7 @@ class Builder():
         line.visible = BuilderUtil.convertBool(self.__xmlGetAttribute(lineNode, 'visible', True))
         line.height = int(self.__xmlGetAttribute(lineNode, 'height', -1))
         line.align = str(self.__xmlGetAttribute(lineNode, 'align', 'align'))
+        line.expand = BuilderUtil.convertBool(self.__xmlGetAttribute(lineNode, 'expand', False))
         for itemNode in lineNode.childNodes:
             item = self.__xmlItemNode2Item(itemNode)
             if item is not None:
