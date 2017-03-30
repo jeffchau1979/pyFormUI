@@ -14,17 +14,13 @@ import uuid
 from xml.dom.minidom import parse
 import xml.dom.minidom
 import  wx
-
-def convertBool(item):
-    if isinstance(item, bool):
-        return item
-    return str(item).lower() == 'true'
+from BuilderUtil import *
 
 class Form():
     def __init__(self):
         self.lines = []
         self.window_conf = {'width':300,'height': 400,
-                             'title':""}
+                             'title':"",'style':'default'}
         self.menubar = None
     def setWindowPara(self,windowConf):
         self.window_conf = dict(self.window_conf, **windowConf)
@@ -42,22 +38,14 @@ class Form():
         self.lines.append(line)
 
     def setCtrlAttribute(self, paraName, paraValue):
-        if paraName == 'width':
-            self.windowWidth = int(paraValue)
-        elif paraName == 'height':
-            self.windowHeight = int(paraValue)
-        elif paraName == 'pos_x':
-            self.windowPosX = int(paraValue)
-        elif paraName == 'pos_y':
-            self.windowPosY = int(paraValue)
-        elif paraName == 'title':
-            self.title = paraValue
+        self.window_conf[paraName] = paraValue
 
     def format(self, builder):
         self.windowWidth = int(self.getWindowConfig('width'))
         self.windowHeight = int(self.getWindowConfig('height'))
         self.windowPosX = self.getWindowConfig('pos_x')
         self.title = self.getWindowConfig('title')
+        self.style = self.getWindowConfig('style')
         screenSize = wx.DisplaySize()
         if self.windowPosX == None:
             self.windowPosX =  (screenSize[0] - self.windowWidth)/2
@@ -68,21 +56,6 @@ class Form():
             self.windowPosY =  (screenSize[1] - self.windowHeight)/2
         else:
             self.windowPosY = int(self.windowPosY)
-
-        fixHeight = 0
-        if self.menubar is not None:
-            fixHeight = fixHeight + Builder.DEFAULT_MENUBAR_HEIGHT
-        fixLineCount = 0
-        for line in self.lines:
-            line.format(builder, self.windowWidth)
-            if line.height > 0:
-                fixHeight = fixHeight + line.height + Builder.DEFAULT_LINE_HEIGHT_SPACE
-                fixLineCount = fixLineCount + 1
-        if fixLineCount < len(self.lines):
-            autoLineHeight = (self.windowHeight - fixHeight) / (len(self.lines) - fixLineCount)
-            for line in self.lines:
-                if line.height < 0:
-                    line.height =  autoLineHeight - Builder.DEFAULT_LINE_HEIGHT_SPACE
 
 class Notebook():
     def __init__(self, id):
@@ -118,9 +91,9 @@ class Panel():
         if paraName == 'name':
             self.panelName = paraValue
         elif paraName == 'visible':
-            self.visible = convertBool(paraValue)
+            self.visible = BuilderUtil.convertBool(paraValue)
         elif paraName == 'enable':
-            self.enable = convertBool(paraValue)
+            self.enable = BuilderUtil.convertBool(paraValue)
         elif paraName == 'height':
             self.height = int(paraValue)
     def getLines(self):
@@ -147,33 +120,19 @@ class Line():
         if paraName == 'align':
             self.align = str(paraValue)
         elif paraName == 'visible':
-            self.visible = convertBool(paraValue)
+            self.visible = BuilderUtil.convertBool(paraValue)
         elif paraName == 'enable':
-            self.enable = convertBool(paraValue)
+            self.enable = BuilderUtil.convertBool(paraValue)
         elif paraName == 'height':
             self.height = int(paraValue)
     def format(self,builder, lineWidth):
-        fixedItemWidth = 0
-        fixedItemCount = 0
         for item in self.items:
-#            if 'id' in item.keys():
-#                self.checkDuplicated(item['id'], idSet)
-            if 'width' in item.keys():
-                fixedItemCount += 1
-                fixedItemWidth += int(item['width'])
             if 'height' not in item.keys():
                 item['height'] = "%d" % Builder.DEFAULT_LINE_HEIGHT
             if int(item['height']) > self.height:
                 self.height = int(item['height'])
             if 'visible' not in item.keys():
                 item['visible'] = "true"
-
-        if fixedItemCount < len(self.items):
-            spaceWidth = lineWidth - fixedItemWidth - Builder.DEFAULT_LINE_WIDTH_EDGE*2
-            itemWidth = spaceWidth / (len(self.items) - fixedItemCount)
-            for item in self.items:
-                if not 'width' in item.keys():
-                    item['width'] = "%d" % itemWidth
 
 class Menu():
     def __init__(self, id):
@@ -194,7 +153,7 @@ class Menu():
         elif paraName == 'title':
             self.title = paraValue
         elif paraName == 'enable':
-            self.enable = convertBool(paraValue)
+            self.enable = BuilderUtil.convertBool(paraValue)
 class Builder():
     DEFAULT_LINE_HEIGHT = -1
     DEFAULT_MENUBAR_HEIGHT = -1
@@ -312,8 +271,8 @@ class Builder():
                     title = self.__xmlGetAttribute(item, 'title', '')
                     hint = self.__xmlGetAttribute(item, 'hint', '')
                     subMenu = menu.addSubMenu(menuId, title, hint)
-                    subMenu.enable = convertBool(self.__xmlGetAttribute(item, 'enable', True))
-                    subMenu.visible = convertBool(self.__xmlGetAttribute(item, 'visible', True))
+                    subMenu.enable = BuilderUtil.convertBool(self.__xmlGetAttribute(item, 'enable', True))
+                    subMenu.visible = BuilderUtil.convertBool(self.__xmlGetAttribute(item, 'visible', True))
                     self.__addIdMap(menuId, subMenu)
                     self.__xmlAddMenu(subMenu,item)
 
@@ -323,8 +282,8 @@ class Builder():
         if line is None:
             line = Line(lineId)
         self.__addIdMap(lineId, line)
-        line.enable = convertBool(self.__xmlGetAttribute(lineNode, 'enable', True))
-        line.visible = convertBool(self.__xmlGetAttribute(lineNode, 'visible', True))
+        line.enable = BuilderUtil.convertBool(self.__xmlGetAttribute(lineNode, 'enable', True))
+        line.visible = BuilderUtil.convertBool(self.__xmlGetAttribute(lineNode, 'visible', True))
         line.height = int(self.__xmlGetAttribute(lineNode, 'height', -1))
         line.align = str(self.__xmlGetAttribute(lineNode, 'align', 'align'))
         for itemNode in lineNode.childNodes:
@@ -352,8 +311,8 @@ class Builder():
         panel.panelName = self.__xmlGetAttribute(panelNode, 'name')
         panel.height = int(self.__xmlGetAttribute(panelNode, 'height', -1))
         panel.width = int(self.__xmlGetAttribute(panelNode, 'width', -1))
-        panel.enable = convertBool(self.__xmlGetAttribute(panelNode, 'enable', True))
-        panel.visible = convertBool(self.__xmlGetAttribute(panelNode, 'visible', True))
+        panel.enable = BuilderUtil.convertBool(self.__xmlGetAttribute(panelNode, 'enable', True))
+        panel.visible = BuilderUtil.convertBool(self.__xmlGetAttribute(panelNode, 'visible', True))
         #self.panels.append(panel)
         for lineNode in panelNode.childNodes:
             if lineNode.nodeName == "line":

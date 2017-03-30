@@ -15,8 +15,12 @@ import wx.lib.filebrowsebutton
 class ControlRegistBase():
     @staticmethod
     def makeCommonPara(item,parent):
-        itemWidth = int(item['width'])
-        itemHeight = int(item['height'])
+        itemWidth = -1
+        if 'width' in item.keys():
+            itemWidth = int(item['width'])
+        itemHeight = -1
+        if 'height' in item.keys():
+            itemHeight = int(item['height'])
         align = ControlRegistBase.getAlign(item)
 
         para ={}

@@ -13,6 +13,7 @@ from Form import *
 import Queue
 from WorkThread import *
 from Builder import *
+from BuilderUtil import *
 
 def create(parent, builder, workQueue):
     return Frame(parent,builder, workQueue)
@@ -28,14 +29,43 @@ class Frame(wx.Frame,FormCtrl):
         self.windowInit = True
         #self.bCloseWindow = False
         self.notebook = None
+        self.style = BuilderUtil.convertStyle(self.form.style)
+        stylePara = self.__makeStylePara()
         wx.Frame.__init__(self, id=wx.NewId(), name='', parent=prnt,
               pos=wx.Point(self.form.windowPosX, self.form.windowPosY), size=wx.Size(self.form.windowWidth, self.form.windowHeight),
-              style=wx.DEFAULT_FRAME_STYLE & ~ wx.MAXIMIZE_BOX, title=self.form.title)
+              style=stylePara, title=self.form.title)
         self.SetClientSize(wx.Size(self.form.windowWidth, self.form.windowHeight))
         self.Center(wx.BOTH)
         self.update(self.builder, True)
         self.windowHandler = WindowHandler(self)
         self.windowInit = False
+
+    def __makeStylePara(self):
+        if 'default' not in self.style.keys():
+            stylePara = wx.DEFAULT_FRAME_STYLE
+        else:
+            stylePara = 0
+
+        styleMap = {}
+        styleMap['default'] = wx.DEFAULT_FRAME_STYLE
+        styleMap['minimize_box'] = wx.MINIMIZE_BOX
+        styleMap['maximize_box'] = wx.MAXIMIZE_BOX
+        styleMap['system_menu'] = wx.SYSTEM_MENU
+        styleMap['resize_box'] = wx.RESIZE_BOX
+        styleMap['resize_border'] = wx.RESIZE_BORDER
+        styleMap['stay_on_top'] = wx.STAY_ON_TOP
+        styleMap['close_box'] = wx.CLOSE_BOX
+        styleMap['iconize'] = wx.ICONIZE
+
+        for (k, v) in self.style.items():
+            if k not in styleMap.keys():
+                continue
+            if BuilderUtil.convertBool(v):
+                stylePara = stylePara | styleMap[k]
+            else:
+                stylePara = stylePara & ~ styleMap[k]
+
+        return stylePara
 
     def initDefaultSize(self, builder,parent):
         if wx.VERSION[0] < 3:
@@ -60,12 +90,14 @@ class Frame(wx.Frame,FormCtrl):
         self._init_ctrls(parent)
         EVT_RESULT(self, self.handlerWorkUIEvent)
         self.Bind(wx.EVT_CLOSE, self.OnFrameClose)
+        self.Bind(wx.EVT_SIZE, self.OnFrameSIZE)
 
     def showMainForm(self):
         self.SetTitle(self.form.title)
         self.SetPosition(wx.Point(self.form.windowPosX, self.form.windowPosY))
         self.SetSize(wx.Size(self.form.windowWidth, self.form.windowHeight))
         self.SetClientSize(wx.Size(self.form.windowWidth, self.form.windowHeight))
+        size = self.GetSize()
         FormCtrl.__init__(self, self.form, self.windowControl)
 
     def update(self, builder = None, updateWindow = False):
@@ -143,4 +175,16 @@ class Frame(wx.Frame,FormCtrl):
 
     def OnFrameClose(self, event):
         self.workQueue.put([EVENT_TYPE_APP_CLOSE, None, None], block=True, timeout=None)
+        event.Skip()
+
+    def OnFrameSIZE(self,event):
+        print("size:" + str(event.Size.width) + "-" + str(event.Size.height))
+        if(event.Size.width != self.form.windowWidth
+            or event.Size.height != self.form.windowHeight):
+            event.Skip()
+            return
+            self.form.windowWidth = event.Size.width
+            self.form.windowHeight = event.Size.height
+            self.form.format(self.builder)
+            self.showMainForm()
         event.Skip()

@@ -1,5 +1,6 @@
 <?xml version="1.0"?> 
-<form title="Demo GUI" width='500' height='600'>
+<form title="Demo GUI" width='500' height='600' style="stay_on_top:false;resize_box:true;resize_border:true">
+<!--form style:default;minimize_box;maximize_box;system_menu;resize_box;resize_border;stay_on_top;close_box;iconize-->
 <menubar>
 	<menu title='File'>
         <menu title='SubMenu'>
@@ -76,7 +77,9 @@
         </line>
     </panel>
 </notebook>
-<line align="right">
+<line>
+    <!--wx.ALIGN_RIGHT is conflict with wx.EXPAND in wxpython，use a blank static to make button align right-->
+    <static title=""/>
     <button id='id_cancel' title='Cancel' width="100"/>
     <button id='id_ok' title='Ok' width="100"/>
 </line>

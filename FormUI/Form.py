@@ -141,14 +141,14 @@ class CtrlBase():
         lineSizer = LineCtrl(self, self.windowControl)
         self.windowSizer.AddSpacer(Builder.DEFAULT_LINE_HEIGHT_SPACE)
         lineSizer.initCtrls(self, line)
-        flag = 0
+        flag = wx.EXPAND | wx.ALL
         if line.align == 'center':
             flag = flag | wx.ALIGN_CENTER
         elif line.align == 'right':
             flag = flag | wx.ALIGN_RIGHT
         elif line.align == 'left':
             flag = flag | wx.ALIGN_LEFT
-        self.windowSizer.AddWindow(lineSizer, 0, border=Builder.DEFAULT_LINE_WIDTH_EDGE, flag=wx.LEFT|flag)
+        self.windowSizer.AddWindow(lineSizer, 0, border=Builder.DEFAULT_LINE_WIDTH_EDGE, flag=flag)
 #        if line.lineId != "":
 #            self.idLineMap[line.lineId] = lineSizer
         if line.visible == False:
@@ -163,7 +163,10 @@ class CtrlBase():
                                   style=wx.TAB_TRAVERSAL, windowControl=self.windowControl
                                   )
         self.windowControl.registItem(panel.panelId, eventId, None, panelControl)
-        self.windowSizer.AddWindow(panelControl, 0, border=0, flag=0)
+        proportion = 1
+        if panel.height >= 0:
+            proportion = 0
+        self.windowSizer.AddWindow(panelControl, proportion, border=0, flag=wx.ALL | wx.EXPAND)
         if panel.visible is False:
             panelControl.Show(False)
         if panel.enable is False:
@@ -178,7 +181,10 @@ class CtrlBase():
                                     pos=wx.Point(0, 0), size=wx.Size(self.form.windowWidth, notebook.height),
                                     style=0)
         self.windowControl.registItem(notebook.id, eventId, None, notebookCtrl)
-        self.windowSizer.AddWindow(notebookCtrl, 0, border=0, flag=0)
+        proportion = 1
+        if notebook.height >= 0:
+            proportion = 0
+        self.windowSizer.AddWindow(notebookCtrl, proportion, border=0, flag=wx.ALL | wx.EXPAND)
         panels = notebook.getPanels()
         panelIndex = 0
         for panel in panels:
@@ -205,8 +211,6 @@ class CtrlBase():
 
     def showWindow(self,lines):
         edge = 5
-        self.lineHeight = 29
-
         self.lines = lines
         self.windowSizer = wx.BoxSizer(orient=wx.VERTICAL)
         self.viewHeight = edge
@@ -320,7 +324,11 @@ class LineCtrl(wx.BoxSizer):
         #if 'id' in item.keys():
         #    self.idItemMap[item['id']] = item
         item['parent'] = self
-        lineSizer.AddWindow(item['control'])
+        proportion  = 1
+        if 'width' in item.keys() and int(item['width']) > 0:
+            proportion = 0
+        self.Add(item['control'], proportion, wx.EXPAND)
+
         if 'id' in item.keys():
             self.windowControl.registItem(item['id'], item['event_id'], item, item['control'])
         return True

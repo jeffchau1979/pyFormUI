@@ -36,17 +36,17 @@ class DateTime(wx.BoxSizer):
     def __init__(self,parent, pos, size,style=0,name='',id=''):
         wx.BoxSizer.__init__(self,wx.HORIZONTAL)
         self.m_datePicker = wx.DatePickerCtrl(parent, wx.NewId(), wx.DefaultDateTime,
-                                               pos, wx.Size(size.width/2 - self.ITEM_BORDER_WIDTH * 2 , size.height),
+                                               pos, wx.Size(0, size.height),
                                                wx.DP_DEFAULT)
-        self.Add(self.m_datePicker, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
+        self.Add(self.m_datePicker, 1, wx.ALL|wx.EXPAND, self.ITEM_BORDER_WIDTH)
 
         self.m_time = wx.lib.masked.timectrl.TimeCtrl(display_seconds=True,
               fmt24hr=True, id=wx.NewId(),
               oob_color=wx.NamedColour('Yellow'), parent=parent,
               pos=pos,
-              size=wx.Size(size.width/2 - self.ITEM_BORDER_WIDTH * 2, size.height),
+              size=wx.Size(0, size.height),
               style=0, useFixedWidthFont=True)
-        self.Add(self.m_time, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
+        self.Add(self.m_time, 1, wx.ALL|wx.EXPAND, self.ITEM_BORDER_WIDTH)
     def GetValue(self):
         return self.m_datePicker.GetValue().FormatISODate() + " " + self.m_time.GetValue()
     def SetValue(self, value):
@@ -75,8 +75,8 @@ class MultiFolderFile(wx.BoxSizer):
         wx.BoxSizer.__init__(self,wx.HORIZONTAL)
 
         self.m_textCtrl = wx.TextCtrl(parent, wx.ID_ANY, wx.EmptyString, pos,
-                                      wx.Size(size.width - Builder.DEFAULT_BUTTON_WIDTH - self.ITEM_BORDER_WIDTH * 2, size.height), wx.TE_MULTILINE|wx.HSCROLL)
-        self.Add(self.m_textCtrl, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
+                                      wx.Size(0, size.height), wx.TE_MULTILINE|wx.HSCROLL)
+        self.Add(self.m_textCtrl, 1, wx.ALL|wx.EXPAND, self.ITEM_BORDER_WIDTH)
 
         self.selectButtonSizer = self.createSelectButtons(pos)
         self.Add(self.selectButtonSizer, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
@@ -167,21 +167,22 @@ class StaticLine(wx.BoxSizer):
                           pos=wx.Point(0, 0), size=wx.Size(-1, -1),
                           style=0)
             textSize = self.staticText.GetSize()
+            leftLineWidth = 0
+            rightLineWidth = 0
+            leftProportion = 1
+            rightProportion = 1
             if style & wx.ALIGN_CENTER != 0:
-                leftLineLen = (size.width - textSize.width) / 2
-                rightLineLen = leftLineLen
+                pass
             elif style & wx.ALIGN_RIGHT != 0:
-                rightLineLen = StaticLine.STATIC_LINE_TEXT_EDGE
-                leftLineLen = size.width - rightLineLen - textSize.width
+                rightLineWidth = StaticLine.STATIC_LINE_TEXT_EDGE
+                rightProportion = 0
             else:
-                leftLineLen = StaticLine.STATIC_LINE_TEXT_EDGE
-                rightLineLen = size.width - leftLineLen - textSize.width
-
-
-            self.leftLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(leftLineLen - self.ITEM_BORDER_WIDTH * 2, textSize.height), wx.LI_HORIZONTAL)
-            self.rightLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(rightLineLen - self.ITEM_BORDER_WIDTH * 2, textSize.height), wx.LI_HORIZONTAL)
-            self.Add(self.leftLine, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
+                leftLineWidth = StaticLine.STATIC_LINE_TEXT_EDGE
+                leftProportion = 0
+            self.leftLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(leftLineWidth, textSize.height),wx.LI_HORIZONTAL)
+            self.rightLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(rightLineWidth, textSize.height),wx.LI_HORIZONTAL)
+            self.Add(self.leftLine, leftProportion, wx.ALL | wx.EXPAND, self.ITEM_BORDER_WIDTH)
             self.Add(self.staticText, 0, wx.ALL, self.ITEM_BORDER_WIDTH)
-            self.Add(self.rightLine, 0, wx.ALL, 0)
+            self.Add(self.rightLine, rightProportion, wx.ALL | wx.EXPAND, 0)
     def Enable(self, bEnable):
         EnableSizer(self, bEnable)

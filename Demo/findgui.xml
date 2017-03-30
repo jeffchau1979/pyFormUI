@@ -1,10 +1,10 @@
 <?xml version="1.0"?> 
-<form title="Find GUI" width='450' height='600'>
+<form title="Find GUI" width='450' height='680'>
     <line>
         <static_line title="Search in Paths:"/>
     </line>
     <line>
-        <multi_folders id="id_path" height="100" value="."/>
+        <multi_folders id="id_path" height="80" value="."/>
     </line>
 
     <line>
@@ -56,7 +56,7 @@
         <static title="Save Result to File:" width='150' />
         <text id='id_save_file' value=""/>
     </line>
-    <line align="right">
-        <button id='id_btn_search' title='Search' width="100"/>
+    <line aligh="center">
+        <button id='id_btn_search' title='Search'/>
     </line>
 </form>
