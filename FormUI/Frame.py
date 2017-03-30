@@ -90,7 +90,6 @@ class Frame(wx.Frame,FormCtrl):
         self._init_ctrls(parent)
         EVT_RESULT(self, self.handlerWorkUIEvent)
         self.Bind(wx.EVT_CLOSE, self.OnFrameClose)
-        self.Bind(wx.EVT_SIZE, self.OnFrameSIZE)
 
     def showMainForm(self):
         self.SetTitle(self.form.title)
@@ -175,16 +174,4 @@ class Frame(wx.Frame,FormCtrl):
 
     def OnFrameClose(self, event):
         self.workQueue.put([EVENT_TYPE_APP_CLOSE, None, None], block=True, timeout=None)
-        event.Skip()
-
-    def OnFrameSIZE(self,event):
-        print("size:" + str(event.Size.width) + "-" + str(event.Size.height))
-        if(event.Size.width != self.form.windowWidth
-            or event.Size.height != self.form.windowHeight):
-            event.Skip()
-            return
-            self.form.windowWidth = event.Size.width
-            self.form.windowHeight = event.Size.height
-            self.form.format(self.builder)
-            self.showMainForm()
         event.Skip()
