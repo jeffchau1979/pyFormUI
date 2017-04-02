@@ -77,10 +77,14 @@ class WindowControl():
                 gControlRegister[item['type']].onSetValue(item, value)
 
     def enableCtrl(self,itemId, bEnable):
-        if itemId in self.id2CtrlMap.keys():
-            ctrlList =self.id2CtrlMap[itemId]
-            for ctrl in ctrlList:
-                ctrl.Enable(bEnable)
+        if itemId not in self.id2CtrlMap.keys():
+            return
+
+        itemList = self.id2ItemMap[itemId]
+        for item in itemList:
+            global gControlRegister
+            if item['type'] in gControlRegister.keys():
+                gControlRegister[item['type']].onEnable(item, bEnable)
 
     def updateLayout(self, ctrl):
         if hasattr(ctrl, 'Layout'):
@@ -91,12 +95,26 @@ class WindowControl():
             self.updateLayout(ctrl.parent)
 
     def showCtrl(self,itemId, bShow):
-        if itemId in self.id2CtrlMap.keys():
-            ctrlList =self.id2CtrlMap[itemId]
-            for ctrl in ctrlList:
-                ctrl.Show(bShow)
-                self.updateLayout(ctrl)
-        #self.window.Layout()
+        if itemId not in self.id2CtrlMap.keys():
+           return
+
+        itemList = self.id2ItemMap[itemId]
+        for item in itemList:
+            global gControlRegister
+            if item['type'] in gControlRegister.keys():
+                self.window.handlerReturn = gControlRegister[item['type']].onShow(item, bShow)
+                self.updateLayout(item['control'])
+                        #self.window.Layout()
+
+    def handlerItemMessage(self,itemId, messageId, messagePara):
+        if itemId not in self.id2CtrlMap.keys():
+            return
+
+        itemList = self.id2ItemMap[itemId]
+        for item in itemList:
+            global gControlRegister
+            if item['type'] in gControlRegister.keys():
+                self.window.handlerReturn = gControlRegister[item['type']].onMessage(item, messageId, messagePara)
 
     def highlightItem(self,itemId):
         if not itemId in self.id2CtrlMap.keys():
@@ -461,12 +479,24 @@ class WindowHandler():
         para['workThread'] = workThread
         wx.PostEvent(self.window, ResultEvent(para))
         if bModule:
-                try:
-                    task = waitQueue.get(block=True)
-                except Queue.Empty:
-                    pass
-                waitQueue.task_done()
+            try:
+                task = waitQueue.get(block=True)
+            except Queue.Empty:
+                pass
+            waitQueue.task_done()
         return workThread.returnState, workThread.valueList
+
+    def sendMessage(self,itemId,messageId,messagePara):
+        para = {}
+        para['itemId'] = itemId
+        para['event'] = EVENT_WORKTHREAD_MESSAGE
+        para['messageId'] = messageId
+        para['messagePara'] = messagePara
+        self.__setWaitHandler(para)
+        wx.PostEvent(self.window, ResultEvent(para))
+        ret = self.__waitHandlerFinish()
+        return ret
+
     def messageBox(self,message, caption):
         para = {}
         para['message'] = message

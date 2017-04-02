@@ -76,6 +76,16 @@ class ControlRegistBase():
         return 0
 
     @staticmethod
+    def onShow(item, bShow):
+        if hasattr(item['control'], 'Show'):
+            item['control'].Show(bShow)
+
+    @staticmethod
+    def onEnable(item, bEnable):
+        if hasattr(item['control'], 'Show'):
+            item['control'].Enable(bEnable)
+
+    @staticmethod
     def onGetValue(item):
         if hasattr(item['control'],'GetValue'):
             value = item['control'].GetValue()
@@ -88,3 +98,6 @@ class ControlRegistBase():
         if hasattr(item['control'], 'SetValue'):
             item['control'].SetValue(value)
 
+    @staticmethod
+    def onMessage(item, messageId, messagePara):
+        return None

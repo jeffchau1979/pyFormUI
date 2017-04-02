@@ -20,7 +20,10 @@ builder.loadLayout('customcontrol.xml')
 #Setup Handler
 def OkButtonHandler(windowHandler, handlerPara):
     print handlerPara.valueList
-    windowHandler.closeWindow()
+
+    print windowHandler.sendMessage('id_custom_ctrl', 'get_message', '')
+    windowHandler.sendMessage('id_custom_ctrl', 'set_message', 'message_para')
+    #windowHandler.closeWindow()
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 
 
@@ -32,7 +35,7 @@ class CustomCtrlRegist(ControlRegistBase):
             para['style'] = para['style'] | wx.TE_MULTILINE
         if 'password' in item.keys() and getItemValue(item, 'password') == 'true':
             para['style'] = para['style'] | wx.TE_PASSWORD
-        para['value'] =  getItemValue(item, 'value', '')
+        para['value'] =  BuilderUtil.getItemValue(item, 'value', '')
         itemCtrl = wx.TextCtrl(**para)
         return itemCtrl
     @staticmethod
@@ -41,6 +44,13 @@ class CustomCtrlRegist(ControlRegistBase):
     @staticmethod
     def onSetValue(item,value):
         item['control'].SetValue(value)
+    @staticmethod
+    def onMessage(item, messageId, messagePara):
+        if messageId == 'get_message':
+            return  "message:" + item['control'].GetValue()
+        elif messageId == "set_message":
+            item['control'].SetValue(messageId + ":" + messagePara)
+        return None
 builder.registControl('custom_ctrl', CustomCtrlRegist)
 
 #Show FormUI

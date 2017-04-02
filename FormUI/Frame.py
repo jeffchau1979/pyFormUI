@@ -155,6 +155,8 @@ class Frame(wx.Frame,FormCtrl):
        elif eventType == EVENT_WORKTHREAD_SHOW_ITEM:
            self.windowControl.showCtrl(para['itemId'], para['bShow'])
            wx.GetApp().SetTopWindow(self)
+       elif eventType == EVENT_WORKTHREAD_MESSAGE:
+           self.windowControl.handlerItemMessage(para['itemId'], para['messageId'],para['messagePara'])
        elif eventType == EVENT_WORKTHREAD_ITEM_SET_VALUE:
            self.windowControl.setItemValue(para['itemId'], para['value'])
        elif eventType == EVENT_WORKTHREAD_HIGHLIGHT_ITEM:
