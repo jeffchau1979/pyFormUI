@@ -9,6 +9,10 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with AndBug.  If not, see <http://www.gnu.org/licenses/>.
 
+################################
+#FormUI is runing on UIThread instead of main thread, in case which can cowork with other application.
+#Another advantage is  main thread can launch other gui application.
+###############################
 
 from Form import *
 from WorkThread import *

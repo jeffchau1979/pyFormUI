@@ -9,6 +9,10 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with AndBug.  If not, see <http://www.gnu.org/licenses/>.
 
+#################
+#Implement the MVC'Control of each control component
+#################
+
 from CustomControl import *
 import wx.lib.scrolledpanel as scrolled
 import wx.lib.filebrowsebutton
@@ -32,7 +36,6 @@ class ChoiseRegist(ControlRegistBase):
         para = ControlRegistBase.makeCommonPara(item, parent)
         para['choices'] =  ControlRegistBase.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         itemCtrl = wx.Choice(**para)
-        value = BuilderUtil.getItemValue(item, 'value', '')
         windowControl.registItemHandler(itemCtrl, para['id'],wx.EVT_CHOICE,'evt_choice')
         return itemCtrl
 

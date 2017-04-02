@@ -77,14 +77,10 @@ class WindowControl():
                 gControlRegister[item['type']].onSetValue(item, value)
 
     def enableCtrl(self,itemId, bEnable):
-        if itemId not in self.id2CtrlMap.keys():
-            return
-
-        itemList = self.id2ItemMap[itemId]
-        for item in itemList:
-            global gControlRegister
-            if item['type'] in gControlRegister.keys():
-                gControlRegister[item['type']].onEnable(item, bEnable)
+        if itemId in self.id2CtrlMap.keys():
+            ctrlList =self.id2CtrlMap[itemId]
+            for ctrl in ctrlList:
+                ctrl.Enable(bEnable)
 
     def updateLayout(self, ctrl):
         if hasattr(ctrl, 'Layout'):
@@ -95,19 +91,15 @@ class WindowControl():
             self.updateLayout(ctrl.parent)
 
     def showCtrl(self,itemId, bShow):
-        if itemId not in self.id2CtrlMap.keys():
-           return
-
-        itemList = self.id2ItemMap[itemId]
-        for item in itemList:
-            global gControlRegister
-            if item['type'] in gControlRegister.keys():
-                self.window.handlerReturn = gControlRegister[item['type']].onShow(item, bShow)
-                self.updateLayout(item['control'])
-                        #self.window.Layout()
+        if itemId in self.id2CtrlMap.keys():
+            ctrlList =self.id2CtrlMap[itemId]
+            for ctrl in ctrlList:
+                ctrl.Show(bShow)
+                self.updateLayout(ctrl)
+        #self.window.Layout()
 
     def handlerItemMessage(self,itemId, messageId, messagePara):
-        if itemId not in self.id2CtrlMap.keys():
+        if itemId not in self.id2ItemMap.keys():
             return
 
         itemList = self.id2ItemMap[itemId]
