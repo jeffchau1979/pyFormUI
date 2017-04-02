@@ -12,6 +12,7 @@
 from Form import *
 import threading
 from Queue import *
+import traceback
 
 EVENT_TYPE_APP_CLOSE = 1
 EVENT_TYPE_WINDOW_CONTROL = 2
@@ -45,7 +46,13 @@ def workThreadRunnable(workQueue):
             windowHandler = task[1]
             para = task[2]
             if eventType == EVENT_TYPE_WINDOW_CONTROL:
-                para.handler(windowHandler,para)
+                try:
+                    para.handler(windowHandler,para)
+                except Exception,ex:
+                    traceback.print_exc()
+                    windowHandler.showWindow(False)
+                    raw_input("Press Enter Key to continue:")
+                    windowHandler.showWindow(True)
                     #windowHandler.taskDone()
                 if windowHandler.windowClosed:
                     returnState = windowHandler.returnOk

@@ -46,6 +46,8 @@ class ControlRegistBase():
         if isinstance(item, list):
             return item
         retList = []
+        if item is None:
+            return retList
         strList = item.split(';')
         for str in strList:
             str = str.replace('[semicolon]', ';')
