@@ -9,10 +9,10 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with AndBug.  If not, see <http://www.gnu.org/licenses/>.
 
-from CustomControl import *
+from ControlBase import *
 
 import wx.lib.filebrowsebutton
-class ControlRegistBase():
+class FormControlUtil():
     @staticmethod
     def makeCommonPara(item,parent):
         itemWidth = -1
@@ -21,7 +21,7 @@ class ControlRegistBase():
         itemHeight = -1
         if 'height' in item.keys():
             itemHeight = int(item['height'])
-        align = ControlRegistBase.getAlign(item)
+        align = FormControlUtil.getAlign(item)
 
         para ={}
         para['size'] = wx.Size(itemWidth, itemHeight)
@@ -77,19 +77,9 @@ class ControlRegistBase():
                 return align
         return 0
 
-    @staticmethod
-    def onGetValue(item):
-        if hasattr(item['control'],'GetValue'):
-            value = item['control'].GetValue()
-            return value
-        else:
-            return None
-
-    @staticmethod
-    def onSetValue(item, value):
-        if hasattr(item['control'], 'SetValue'):
-            item['control'].SetValue(value)
-
-    @staticmethod
-    def onMessage(item, messageId, messagePara):
+class FormControlBase():
+    def __init__(self,item):
+        self.item = item
+        item['control'] = self
+    def onMessage(self,messageId, messagePara):
         return None

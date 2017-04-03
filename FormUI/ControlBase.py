@@ -26,7 +26,7 @@ def EnableSizer(item, bEnable):
 '''
 Todo:Add class ControlBase used as the base of all Customed Control
 '''
-class DateTime(wx.BoxSizer):
+class DateTimeBase(wx.BoxSizer):
     ITEM_BORDER_WIDTH = 0
     def __init__(self,parent, pos, size,style=0,name='',id=''):
         wx.BoxSizer.__init__(self,wx.HORIZONTAL)
@@ -59,7 +59,7 @@ class DateTime(wx.BoxSizer):
     def SetFocus(self):
         self.m_datePicker.SetFocus()
 
-class MultiFolderFile(wx.BoxSizer):
+class MultiFolderFileBase(wx.BoxSizer):
     ITEM_BORDER_WIDTH = 0
     ITEM_BORDER_BUTTON_SPACE = 1
     def __init__(self,parent, pos, size,mask,bAddFile,bAddFolder,style=0,name='',id=''):
@@ -145,7 +145,7 @@ class MultiFolderFile(wx.BoxSizer):
     def SetFocus(self):
         self.m_textCtrl.SetFocus()
 
-class StaticLine(wx.BoxSizer):
+class StaticLineBase(wx.BoxSizer):
     STATIC_LINE_TEXT_EDGE = 20
     ITEM_BORDER_WIDTH = 0
     def __init__(self,parent, pos, size, label, style = wx.ALIGN_LEFT,name='',id=''):
@@ -169,10 +169,10 @@ class StaticLine(wx.BoxSizer):
             if style & wx.ALIGN_CENTER != 0:
                 pass
             elif style & wx.ALIGN_RIGHT != 0:
-                rightLineWidth = StaticLine.STATIC_LINE_TEXT_EDGE
+                rightLineWidth = StaticLineBase.STATIC_LINE_TEXT_EDGE
                 rightProportion = 0
             else:
-                leftLineWidth = StaticLine.STATIC_LINE_TEXT_EDGE
+                leftLineWidth = StaticLineBase.STATIC_LINE_TEXT_EDGE
                 leftProportion = 0
             self.leftLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(leftLineWidth, textSize.height),wx.LI_HORIZONTAL)
             self.rightLine = wx.StaticLine(parent, wx.NewId(), wx.Point(0, 0), wx.Size(rightLineWidth, textSize.height),wx.LI_HORIZONTAL)

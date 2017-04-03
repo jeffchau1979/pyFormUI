@@ -178,7 +178,7 @@ class Builder():
         self.__idMap = {}
 
         self.blockWhenIdError = True
-        self.ctrlRegist = {}
+        self.ctrlTypeRegist = {}
 
     def setDefaultHandler(self, handler):
         self.defaultHandler =handler
@@ -363,5 +363,5 @@ class Builder():
                 self.form.menubar = Menu('')
             self.__xmlAddMenu(self.form.menubar, menubarNode)
 
-    def registControl(self, ctrlName, ctrlRegist):
-        self.ctrlRegist[ctrlName] = ctrlRegist
+    def registControlType(self, ctrlName, ctrlTypeRegist):
+        self.ctrlTypeRegist[ctrlName] = ctrlTypeRegist

@@ -106,8 +106,8 @@ class Frame(wx.Frame,FormCtrl):
                 self.initWindowPara()
          if self.windowInit is False:
              self.DestroyForm()
-         for (k,v) in builder.ctrlRegist.items():
-             gControlRegister[k] = v
+         for (k,v) in builder.ctrlTypeRegist.items():
+             gControlTypeRegister[k] = v
          self.windowControl = WindowControl(self.builder.handlerMap, self)
          self.showMainForm()
 

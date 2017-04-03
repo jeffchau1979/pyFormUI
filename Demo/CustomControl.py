@@ -27,31 +27,30 @@ def OkButtonHandler(windowHandler, handlerPara):
 builder.setCtrlHandler('id_ok', OkButtonHandler)
 
 
-class CustomCtrlRegist(ControlRegistBase):
-    @staticmethod
-    def onCreate(item, parent, windowControl):
-        para = ControlRegistBase.makeCommonPara(item,parent)
+class CustomCtrl(FormControlBase,wx.TextCtrl):
+    def __init__(self, item, parent, windowControl):
+        FormControlBase.__init__(self, item)
+        para = FormControlUtil.makeCommonPara(item,parent)
         if 'multi_line' in item.keys() and getItemValue(item, 'multi_line') == 'true':
             para['style'] = para['style'] | wx.TE_MULTILINE
         if 'password' in item.keys() and getItemValue(item, 'password') == 'true':
             para['style'] = para['style'] | wx.TE_PASSWORD
         para['value'] =  BuilderUtil.getItemValue(item, 'value', '')
-        itemCtrl = wx.TextCtrl(**para)
-        return itemCtrl
-    @staticmethod
-    def onGetValue(item):
-        return item['control'].GetValue()
-    @staticmethod
-    def onSetValue(item,value):
-        item['control'].SetValue(value)
-    @staticmethod
-    def onMessage(item, messageId, messagePara):
+        wx.TextCtrl.__init__(self, **para)
+
+    def GetValue(self):
+        return wx.TextCtrl.GetValue(self)
+
+    def SetValue(self,value):
+        wx.TextCtrl.SetValue(self,value)
+
+    def onMessage(self, messageId, messagePara):
         if messageId == 'get_message':
-            return  "message:" + item['control'].GetValue()
+            return  "message:" + self.item['control'].GetValue()
         elif messageId == "set_message":
-            item['control'].SetValue(messageId + ":" + messagePara)
+            self.item['control'].SetValue(messageId + ":" + messagePara)
         return None
-builder.registControl('custom_ctrl', CustomCtrlRegist)
+builder.registControlType('custom_ctrl', CustomCtrl)
 
 #Show FormUI
 formUI = FormUI(builder)

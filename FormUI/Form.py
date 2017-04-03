@@ -11,7 +11,7 @@
 #from CommonCtrl import *
 import wx.lib.filebrowsebutton
 import Queue
-from ControlRegist import  *
+from FormControl import  *
 from WorkThread import *
 from Builder import *
 
@@ -59,12 +59,11 @@ class WindowControl():
         ctrl.Bind(eventType, self.OnItemEvent, id = eventId)
 
     def updateResult(self, valueList):
-        global gControlRegister
+        global gControlTypeRegister
         for item in self.valueItems:
-            if item['type'] in gControlRegister.keys():
-                value = gControlRegister[item['type']].onGetValue(item)
-                if value is not None:
-                    valueList[item['id']] = value
+            value = item['control'].GetValue()
+            if value is not None:
+                valueList[item['id']] = value
 
     def setItemValue(self,itemId, value):
         if itemId not in self.id2CtrlMap.keys():
@@ -72,9 +71,9 @@ class WindowControl():
 
         itemList = self.id2ItemMap[itemId]
         for item in itemList:
-            global gControlRegister
-            if item['type'] in gControlRegister.keys():
-                gControlRegister[item['type']].onSetValue(item, value)
+            global gControlTypeRegister
+            if item['type'] in gControlTypeRegister.keys():
+                gControlTypeRegister[item['type']].onSetValue(item, value)
 
     def enableCtrl(self,itemId, bEnable):
         if itemId in self.id2CtrlMap.keys():
@@ -104,9 +103,7 @@ class WindowControl():
 
         itemList = self.id2ItemMap[itemId]
         for item in itemList:
-            global gControlRegister
-            if item['type'] in gControlRegister.keys():
-                self.window.handlerReturn = gControlRegister[item['type']].onMessage(item, messageId, messagePara)
+            self.window.handlerReturn = item['control'].onMessage(messageId, messagePara)
 
     def highlightItem(self,itemId):
         if not itemId in self.id2CtrlMap.keys():
@@ -315,14 +312,14 @@ class LineCtrl(wx.BoxSizer):
         return 0
 
     def createItem(self, lineSizer, item):
-        global gControlRegister
-        if item['type'] in gControlRegister.keys():
-            item['control'] = gControlRegister[item['type']].onCreate(item, self.parent,self.windowControl)
+        global gControlTypeRegister
+        if item['type'] in gControlTypeRegister.keys():
+            item['control'] = gControlTypeRegister[item['type']](item, self.parent,self.windowControl)
         else:
             return
 
         if 'value' in item.keys() and item['value'] != '':
-            gControlRegister[item['type']].onSetValue(item, item['value'])
+            item['control'].SetValue(item['value'])
 
         if 'visible' in item.keys():
             if item['visible'] == 'false':
