@@ -16,9 +16,19 @@ import wx.lib.filebrowsebutton
 
 global gControlTypeRegister
 gControlTypeRegister = {}
+
+###########################
+##FormCtrol should implement the interfaces listed below:
+##    def GetValue(self):
+##    def SetValue(self,value):
+##    def Enable(self,bEnable):
+##    def SetFocus(self):
+##    def onMessage(self, messageId, messagePara):
+###########################
+
 class Static(wx.StaticText, FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['label'] = FormControlUtil.getLable(item)
         wx.StaticText.__init__(self,**para)
@@ -226,7 +236,7 @@ gControlTypeRegister['datetime'] = DateTime
 
 class Button(FormControlBase,wx.Button):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['label'] = FormControlUtil.getLable(item)
         wx.Button.__init__(self,**para)

@@ -123,9 +123,10 @@ class WindowControl():
                 pass
             else:
                 line = ctrl.parent
-                panel = line.parent
-                if isinstance(panel, PanelCtrl) and panel.panelIndex != None:
-                    panel.noteboolCtrl.SetSelection(panel.panelIndex)
+                if hasattr(line, 'parent'):
+                    panel = line.parent
+                    if isinstance(panel, PanelCtrl) and panel.panelIndex != None:
+                        panel.noteboolCtrl.SetSelection(panel.panelIndex)
                 ctrl.SetFocus()
 
     def makeReturnPara(self, eventId, eventType,handler):

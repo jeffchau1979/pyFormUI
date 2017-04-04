@@ -78,8 +78,9 @@ class FormControlUtil():
         return 0
 
 class FormControlBase():
-    def __init__(self,item):
+    def __init__(self,item,parent):
         self.item = item
         item['control'] = self
+        self.parent = parent
     def onMessage(self,messageId, messagePara):
         return None
