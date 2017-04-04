@@ -23,9 +23,7 @@ def EnableSizer(item, bEnable):
             widget.Enable(bEnable)
         elif isinstance(child, wx.SizerItem):
             EnableSizer(child.GetSizer(), bEnable)
-'''
-Todo:Add class ControlBase used as the base of all Customed Control
-'''
+
 class DateTimeBase(wx.BoxSizer):
     ITEM_BORDER_WIDTH = 0
     def __init__(self,parent, pos, size,style=0,name='',id=''):
