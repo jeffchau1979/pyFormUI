@@ -105,9 +105,10 @@ class MultiFolderFileBase(wx.BoxSizer):
         defaultFile = ''
         if len(fileList) > 0:
             defaultFile = fileList[-1]
+        dirname, basename = os.path.split(defaultFile)
         dlg = wx.FileDialog(self.parent, message="Select Files",
-                            defaultDir='.',
-                            defaultFile=defaultFile,
+                            defaultDir=dirname,
+                            defaultFile=basename,
                             wildcard=self.mask,
                             style=wx.OPEN | wx.MULTIPLE | wx.CHANGE_DIR)
         if dlg.ShowModal() == wx.ID_OK:
