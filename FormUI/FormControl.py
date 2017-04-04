@@ -45,7 +45,7 @@ class Choise(wx.Choice, FormControlBase):
         para = FormControlUtil.makeCommonPara(item, parent)
         para['choices'] =  FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         itemCtrl = wx.Choice.__init__(self,**para)
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         windowControl.registItemHandler(self, para['id'],wx.EVT_CHOICE,'evt_choice')
 
     def GetValue(self):
@@ -63,7 +63,7 @@ gControlTypeRegister['choise'] = Choise
 
 class Text(FormControlBase,wx.TextCtrl):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         if 'multi_line' in item.keys() and BuilderUtil.getItemValue(item, 'multi_line') == 'true':
             para['style'] = para['style'] | wx.TE_MULTILINE
@@ -77,7 +77,7 @@ gControlTypeRegister['text'] = Text
 
 class StaticLine(StaticLineBase,FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item, parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['label'] = FormControlUtil.getLable(item)
         itemCtrl = StaticLineBase.__init__(self, **para)
@@ -92,7 +92,7 @@ gControlTypeRegister['static_line'] = StaticLine
 
 class CheckList(wx.CheckListBox,FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         para['choices'] = choices
@@ -123,7 +123,7 @@ gControlTypeRegister['check_list'] = CheckList
 
 class List(wx.ListBox, FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         para['choices'] = choices
@@ -143,7 +143,7 @@ gControlTypeRegister['list'] = List
 
 class RadioBox(wx.RadioBox, FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         para['choices'] = choices
@@ -165,7 +165,7 @@ gControlTypeRegister['radio_box'] = RadioBox
 
 class Check(wx.CheckBox, FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['label'] = FormControlUtil.getLable(item)
         itemCtrl = wx.CheckBox.__init__(self,**para)
@@ -184,7 +184,7 @@ gControlTypeRegister['check'] = Check
 
 class ComboBox(wx.ComboBox, FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'choices', []))
         para['choices'] = choices
@@ -198,7 +198,7 @@ gControlTypeRegister['combo_box'] = ComboBox
 
 class Date(wx.DatePickerCtrl,FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['style'] = para['style'] | wx.DP_SHOWCENTURY | wx.DP_DEFAULT
         itemCtrl = wx.DatePickerCtrl.__init__(self,**para)
@@ -216,7 +216,7 @@ gControlTypeRegister['date'] = Date
 
 class Time(wx.lib.masked.timectrl.TimeCtrl,FormControlBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['display_seconds'] = True
         para['fmt24hr'] = True
@@ -228,7 +228,7 @@ gControlTypeRegister['time'] = Time
 
 class DateTime(FormControlBase,DateTimeBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         DateTimeBase.__init__(self,**para)
 gControlTypeRegister['datetime'] = DateTime
@@ -251,7 +251,7 @@ gControlTypeRegister['button'] = Button
 
 class File(FormControlBase,wx.lib.filebrowsebutton.FileBrowseButtonWithHistory):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['buttonText'] = 'Browse'
         para['dialogTitle'] = 'Choose a file'
@@ -269,7 +269,7 @@ gControlTypeRegister['file'] = File
 
 class Folder(FormControlBase,wx.lib.filebrowsebutton.DirBrowseButton):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         value = BuilderUtil.getItemValue(item, 'value', '')
         para['dialogTitle'] = 'Choose a folder'
@@ -282,7 +282,7 @@ gControlTypeRegister['folder'] = Folder
 
 class Folder(FormControlBase,wx.lib.filebrowsebutton.DirBrowseButton):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         value = BuilderUtil.getItemValue(item, 'value', '')
         para['dialogTitle'] = 'Choose a folder'
@@ -294,7 +294,7 @@ gControlTypeRegister['folder'] = Folder
 
 class MultiFiles(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = True
@@ -306,7 +306,7 @@ gControlTypeRegister['multi_files'] = MultiFiles
 
 class MultiFolders(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = False
@@ -318,7 +318,7 @@ gControlTypeRegister['multi_folders'] = MultiFolders
 
 class MultiFolersFiles(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
         para['bAddFile'] = True
@@ -328,7 +328,7 @@ gControlTypeRegister['multi_folders_files'] = MultiFolersFiles
 
 class Table(FormControlBase,wx.ListCtrl):
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['style'] = para['style'] | wx.LC_REPORT | wx.BORDER_SUNKEN
         itemCtrl = wx.ListCtrl.__init__(self,**para)
@@ -386,7 +386,7 @@ class Tree(FormControlBase,wx.TreeCtrl):
                 self.AddTree(nodeCtrl, subNode,idMap)
 
     def __init__(self, item, parent, windowControl):
-        FormControlBase.__init__(self, item)
+        FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
         para['style'] = para['style'] | wx.TR_HAS_BUTTONS | wx.TR_MULTIPLE
         itemCtrl = wx.TreeCtrl.__init__(self,**para)
