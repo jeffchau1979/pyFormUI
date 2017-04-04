@@ -296,7 +296,7 @@ class LineCtrl(wx.BoxSizer):
         item['control'] = MultiFolderFile(parent=self.parent,
                                    pos=wx.Point(0, 0),
                                    size=wx.Size(itemWidth, itemHeight),
-                                   mask=BuilderUtil.getItemValue(item, 'mask', '*.*'),
+                                   mask=BuilderUtil.getItemValue(item, 'mask', '*'),
                                    bAddFile=bAddFile, bAddFolder=bAddFolder)
         if value != "":
             item['control'].SetValue(value)

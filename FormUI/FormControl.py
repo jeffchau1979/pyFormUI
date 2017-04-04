@@ -255,7 +255,7 @@ class File(FormControlBase,wx.lib.filebrowsebutton.FileBrowseButtonWithHistory):
         para = FormControlUtil.makeCommonPara(item,parent)
         para['buttonText'] = 'Browse'
         para['dialogTitle'] = 'Choose a file'
-        para['fileMask'] = BuilderUtil.getItemValue(item, 'mark', "*.*")
+        para['fileMask'] = BuilderUtil.getItemValue(item, 'mark', "*")
         para['labelText'] = FormControlUtil.getLable(item)
         para['style'] = para['style'] | wx.TAB_TRAVERSAL
         para['startDirectory'] = '.'
@@ -296,7 +296,7 @@ class MultiFiles(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
         FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
-        para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
+        para['mask'] = BuilderUtil.getItemValue(item, 'mask', "*")
         para['bAddFile'] = True
         para['bAddFolder'] = False
         value = BuilderUtil.getItemValue(item, 'value', '')
@@ -308,7 +308,7 @@ class MultiFolders(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
         FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
-        para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
+        para['mask'] = BuilderUtil.getItemValue(item, 'mask', "*")
         para['bAddFile'] = False
         para['bAddFolder'] = True
         value = BuilderUtil.getItemValue(item, 'value', '')
@@ -320,7 +320,7 @@ class MultiFolersFiles(FormControlBase,MultiFolderFileBase):
     def __init__(self, item, parent, windowControl):
         FormControlBase.__init__(self, item,parent)
         para = FormControlUtil.makeCommonPara(item,parent)
-        para['mask'] = BuilderUtil.getItemValue(item, 'mask', '*.*')
+        para['mask'] = BuilderUtil.getItemValue(item, 'mask', "*")
         para['bAddFile'] = True
         para['bAddFolder'] = True
         MultiFolderFileBase.__init__(self,**para)
