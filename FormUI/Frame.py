@@ -179,5 +179,6 @@ class Frame(wx.Frame,FormCtrl):
            self.handlerFinishQueue.put([EVENT_UITHREAD_HANDLER_FINISH], block=True, timeout=None)
 
     def OnFrameClose(self, event):
+        self.windowState = self.WINDOW_STATE_CLOSED
         self.workQueue.put([EVENT_TYPE_APP_CLOSE, None, None], block=True, timeout=None)
         event.Skip()
