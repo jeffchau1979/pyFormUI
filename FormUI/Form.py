@@ -66,14 +66,10 @@ class WindowControl():
                 valueList[item['id']] = value
 
     def setItemValue(self,itemId, value):
-        if itemId not in self.id2CtrlMap.keys():
-            return
-
-        itemList = self.id2ItemMap[itemId]
-        for item in itemList:
-            global gControlTypeRegister
-            if item['type'] in gControlTypeRegister.keys():
-                gControlTypeRegister[item['type']].onSetValue(item, value)
+        if itemId in self.id2CtrlMap.keys():
+            ctrlList =self.id2CtrlMap[itemId]
+            for ctrl in ctrlList:
+                ctrl.SetValue(value)
 
     def enableCtrl(self,itemId, bEnable):
         if itemId in self.id2CtrlMap.keys():
@@ -135,6 +131,8 @@ class WindowControl():
         return  para
 
     def OnItemEvent(self, event):
+        if self.window.windowState != self.window.WINDOW_STATE_WORK:
+            return
         if event.Id in self.eventId2IdMap.keys():
             id = self.eventId2IdMap[event.Id]
             if id != None and id != '':
@@ -420,7 +418,7 @@ class WindowHandler():
         return self.window.handlerReturn
 
     def closeWindow(self, returnOk = True):
-        self.windowClosed = True
+        self.window.windowState = self.window.WINDOW_STATE_CLOSED
         self.returnOk = True
         para = {}
         para['event'] = EVENT_WORKTHREAD_CLOSE

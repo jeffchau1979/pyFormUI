@@ -21,12 +21,15 @@ def create(parent, builder, workQueue):
 [wxID_DIALOG1BUTTONOK, wxID_DIALOG1BUTTONCANCEL] = [wx.NewId() for _init_ctrls in range(2)]
 
 class Frame(wx.Frame,FormCtrl):
+    WINDOW_STATE_INIT = 0
+    WINDOW_STATE_WORK = 1
+    WINDOW_STATE_CLOSED = 2
     def initWindowPara(self):
         self.form = self.builder.form
 
     def _init_ctrls(self, prnt):
         self.initWindowPara()
-        self.windowInit = True
+        self.windowState = self.WINDOW_STATE_INIT
         #self.bCloseWindow = False
         self.notebook = None
         self.style = BuilderUtil.convertStyle(self.form.style)
@@ -38,7 +41,6 @@ class Frame(wx.Frame,FormCtrl):
         self.Center(wx.BOTH)
         self.update(self.builder, True)
         self.windowHandler = WindowHandler(self)
-        self.windowInit = False
 
     def __makeStylePara(self):
         if 'default' not in self.style.keys():
@@ -104,12 +106,14 @@ class Frame(wx.Frame,FormCtrl):
             self.builder = builder
             if updateWindow:
                 self.initWindowPara()
-         if self.windowInit is False:
+         if self.windowState == self.WINDOW_STATE_WORK:
+             self.windowState = self.WINDOW_STATE_CLOSED
              self.DestroyForm()
          for (k,v) in builder.ctrlTypeRegist.items():
              gControlTypeRegister[k] = v
          self.windowControl = WindowControl(self.builder.handlerMap, self)
          self.showMainForm()
+         self.windowState = self.WINDOW_STATE_WORK
 
     def onsubFormExit(self, workThread):
         pass
