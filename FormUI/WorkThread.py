@@ -54,7 +54,8 @@ def workThreadRunnable(workQueue):
                     raw_input("Press Enter Key to continue:")
                     windowHandler.showWindow(True)
                     #windowHandler.taskDone()
-                if windowHandler.window.windowState == windowHandler.window.WINDOW_STATE_CLOSED:
+
+                if not windowHandler.window or windowHandler.window.windowState == windowHandler.window.WINDOW_STATE_CLOSED:
                     returnState = windowHandler.returnOk
                     valueList = para.valueList
             elif  eventType == EVENT_TYPE_APP_CLOSE:
