@@ -9,7 +9,7 @@
 
     <line>
         <static title="File:" width='60'/>
-        <text id="id_search"/>
+        <text id="id_search" value="*"/>
     </line>
 
     <line>
