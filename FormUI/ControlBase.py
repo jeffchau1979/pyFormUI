@@ -128,7 +128,7 @@ class MultiFolderFileBase(wx.BoxSizer):
         if len(fileList) > 0:
             defaultFile = fileList[-1]
         dlg = wx.DirDialog(self.parent, "Select Folder", style=wx.DD_DEFAULT_STYLE)
-        if defaultFile != '':
+        if defaultFile != '' and os.path.exists(defaultFile):
             dlg.SetPath(self.getPath(defaultFile))
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
