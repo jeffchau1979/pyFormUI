@@ -9,6 +9,8 @@
 ## You should have received a copy of the GNU Lesser General Public License
 ## along with AndBug.  If not, see <http://www.gnu.org/licenses/>.
 #from CommonCtrl import *
+
+#Some static methods for Builder
 class BuilderUtil():
     def __init__(self):
         pass

@@ -16,6 +16,7 @@ import xml.dom.minidom
 import  wx
 from BuilderUtil import *
 
+#Form Builder
 class Form():
     def __init__(self):
         self.lines = []
@@ -57,6 +58,7 @@ class Form():
         else:
             self.windowPosY = int(self.windowPosY)
 
+#NoteBook Builder
 class Notebook():
     def __init__(self, id):
         self.panels = []
@@ -73,6 +75,7 @@ class Notebook():
         for panel in self.panels:
             panel.format(builder, lineWidth)
 
+#Panel Builder
 class Panel():
     PANEL_EDGE_WIDTH = 1
     def __init__(self, panelId):
@@ -103,7 +106,7 @@ class Panel():
             self.width = lineWidth
         for line in self.lines:
             line.format(builder, self.width - Panel.PANEL_EDGE_WIDTH *2)
-
+#line Builder
 class Line():
     def __init__(self, lineId):
         self.items = []
@@ -138,7 +141,7 @@ class Line():
                 self.height = int(item['height'])
             if 'visible' not in item.keys():
                 item['visible'] = "true"
-
+#Menu Builder
 class Menu():
     def __init__(self, id):
         self.subMenus = []
@@ -159,6 +162,8 @@ class Menu():
             self.title = paraValue
         elif paraName == 'enable':
             self.enable = BuilderUtil.convertBool(paraValue)
+
+#The Buidler for Window
 class Builder():
     DEFAULT_LINE_HEIGHT = -1
     DEFAULT_MENUBAR_HEIGHT = -1
