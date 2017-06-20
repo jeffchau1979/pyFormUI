@@ -241,6 +241,7 @@ class Button(FormControlBase,wx.Button):
         para['label'] = FormControlUtil.getLable(item)
         wx.Button.__init__(self,**para)
         windowControl.registItemHandler(self, para['id'], wx.EVT_BUTTON,'evt_button')
+
     def GetValue(self):
         return None
 

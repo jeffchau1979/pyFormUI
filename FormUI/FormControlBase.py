@@ -12,6 +12,9 @@
 from ControlBase import *
 
 import wx.lib.filebrowsebutton
+
+#From Control Util,
+#Some static method for Form Control
 class FormControlUtil():
     @staticmethod
     def makeCommonPara(item,parent):
@@ -39,7 +42,27 @@ class FormControlUtil():
             labelText = BuilderUtil.getItemValue(item, 'lable', "")
         elif 'title' in item.keys():
             labelText = BuilderUtil.getItemValue(item, 'title', "")
+        else:
+            return ''
+
+        if '\\t' in labelText:
+            labelText = labelText[:labelText.find('\\t')]
+        return labelText
+
+    @staticmethod
+    def getAccelerator(item):
+        if 'label' in item.keys():
+            labelText = BuilderUtil.getItemValue(item, 'lable', "")
+        elif 'title' in item.keys():
+            labelText = BuilderUtil.getItemValue(item, 'title', "")
+        else:
+            return None
+
+        if '\\t' in labelText:
+            labelText = labelText[labelText.find('\\t')+2:]
             return labelText
+        else:
+            return None
 
     @staticmethod
     def convertList(item):
@@ -77,6 +100,7 @@ class FormControlUtil():
                 return align
         return 0
 
+#Form Control Base
 class FormControlBase():
     def __init__(self,item,parent):
         self.item = item

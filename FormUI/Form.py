@@ -21,12 +21,14 @@ def EVT_RESULT(win, func):
     """Define Result Event."""
     win.Connect(-1, -1, EVT_RESULT_ID, func)
 
+##Result Event,used to postEvent to window
 class ResultEvent(wx.PyEvent):
     def __init__(self, data):
         wx.PyEvent.__init__(self)
         self.SetEventType(EVT_RESULT_ID)
         self.data = data
 
+##WindowControl, Deseperate Control From Frame
 class WindowControl():
     def __init__(self, handlerMap, window):
         self.window = window
@@ -37,6 +39,34 @@ class WindowControl():
         self.id2ItemMap = {}
         self.valueItems = []
         self.eventTypeNameMap = {}
+        self.acceleratorTable = []
+        #self.window.SetAcceleratorTable(accelTbl)
+
+    def __registAccelerator(self, accelerator, ctrlId):
+        accelerator = accelerator.lower()
+        accelerator = accelerator.split('+')
+        ctrlKey = wx.ACCEL_NORMAL
+        normalKey = ''
+        for item in accelerator:
+            if item == 'ctrl':
+                if ctrlKey == wx.ACCEL_NORMAL:
+                    ctrlKey = wx.ACCEL_CTRL
+                else:
+                    ctrlKey = ctrlKey | wx.ACCEL_CTRL
+            elif item == 'alt':
+                if ctrlKey == wx.ACCEL_NORMAL:
+                    ctrlKey = wx.ACCEL_ALT
+                else:
+                    ctrlKey = ctrlKey | wx.ACCEL_ALT
+            elif item == 'shift':
+                if ctrlKey == wx.ACCEL_NORMAL:
+                    ctrlKey = wx.ACCEL_SHIFT
+                else:
+                    ctrlKey = ctrlKey | wx.ACCEL_SHIFT
+            else:
+                normalKey = item
+
+        self.acceleratorTable.append((ctrlKey, int(ord(normalKey)), ctrlId))
 
     def registItem(self, id, eventId, item, control):
         if item is not None:
@@ -49,6 +79,11 @@ class WindowControl():
         if id not in self.id2CtrlMap.keys():
             self.id2CtrlMap[id] = []
         self.id2CtrlMap[id].append(control)
+
+        if item != None:
+            accelerator = FormControlUtil.getAccelerator(item)
+            if accelerator is not None:
+                self.__registAccelerator(accelerator, eventId)
 
         if eventId is not None:
             self.eventId2IdMap[eventId] = id
@@ -138,6 +173,8 @@ class WindowControl():
             if id != None and id != '':
                 self.window.CallFormHandler(id,self.eventTypeNameMap[event.EventType])
 
+#Todo:Notebook,Panel,Line Refactored by Composite Pattern
+##The Base Class of Ctrl
 class CtrlBase():
     def __init__(self,windowControl,form):
         self.windowControl = windowControl
@@ -268,6 +305,7 @@ class CtrlBase():
                     menu.AppendItem(submenu)
             return menu,'menu'
         else:
+            menuInfo.title = menuInfo.title.replace('\\t', '\t')
             menuItem = wx.MenuItem(currentMenu, eventId, menuInfo.title, menuInfo.hint)
             self.windowControl.registItem(menuInfo.id, eventId, None, menuItem)
             self.windowControl.registItemHandler(self, eventId, wx.EVT_MENU, 'evt_menu')
@@ -285,6 +323,8 @@ class CtrlBase():
                 if menuInfo.id in self.windowControl.id2EventIdMap.keys():
                     self.menuBar.Enable(self.windowControl.id2EventIdMap[menuInfo.id], False)
 
+##Line Ctrl
+##Ctrl Must Put in Line Ctrl
 class LineCtrl(wx.BoxSizer):
     def __init__(self,parent, windowControl):
         wx.BoxSizer.__init__(self,wx.HORIZONTAL)
@@ -359,6 +399,7 @@ class LineCtrl(wx.BoxSizer):
             elif not isinstance(widget,wx.StaticText) and not isinstance(widget,StaticLine):
                 widget.SetFocus()
 
+##Panel
 class PanelCtrl(scrolled.ScrolledPanel,CtrlBase):
     def __init__(self, parent, id, pos, size, style, name,lines,form,windowControl):
         #scrolled.ScrolledPanel.__init__(self, parent, -1)
@@ -370,6 +411,7 @@ class PanelCtrl(scrolled.ScrolledPanel,CtrlBase):
         self.parent = self
         self.showWindow(lines)
 
+#Form Ctrl
 class FormCtrl(CtrlBase):
     def __init__(self,form, windowControl):
         CtrlBase.__init__(self, windowControl, form)
@@ -383,6 +425,9 @@ class FormCtrl(CtrlBase):
             self.SetMenuBar(None)
         self.Layout()
 
+##Handler Para
+##The Menu,Ctrl can Set Handler, The Handler will be called when click or other event
+##The Handler Para will be passed to Handler, from which Handler can get ctrl value
 class HandlerPara():
     def __init__(self, eventId,eventType,handler):
         self.valueList = {}
@@ -399,6 +444,9 @@ class HandlerPara():
     def getEventType(self):
         return self.eventType
 
+##Handler Para
+##The Menu,Ctrl can Set Handler, The Handler will be called when click or other event
+##WindowHandler will be passed to Handler, Handler can control the window by WindowHandler
 class WindowHandler():
     def __init__(self, window):
         self.window = window

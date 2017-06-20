@@ -4,7 +4,8 @@
 <menubar>
 	<menu title='File'>
         <menu title='SubMenu'>
-		    <menu title='MenuItem' id='id_menu' enable="false"/>
+            <!--set accelerator by adding \t key combination  in title-->
+		    <menu title='MenuItem\tctrl+m' id='id_menu' enable="true"/>
         </menu>
 	</menu>
 </menubar>
@@ -21,7 +22,8 @@
             <text id='id_text' height='100' multi_line="true"/>
         </line>
         <line>
-            <button id='id_button' title='Button'/>
+            <!--set accelerator by adding \t key combination  in title or lable-->
+            <button id='id_button' title='Button\tctrl+s'/>
         </line>
         <line>
             <button id='id_button_findgui' title='Show Other Form'/>

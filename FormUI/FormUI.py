@@ -26,6 +26,7 @@ modules ={u'Frame': [1, 'Main frame of Application', u'Frame.py']}
 import warnings
 warnings.filterwarnings("ignore",".*trying to remove*")
 
+##The Application
 class FormDialogApp(wx.App):
     def __init__(self, parent, builder, workQueue):
         super(FormDialogApp, self).__init__(parent)
@@ -34,6 +35,8 @@ class FormDialogApp(wx.App):
             self.main.Show()
             self.SetTopWindow(self.main)
 
+#The UI Thread
+#not the main Thread
 class UIThread(threading.Thread):
     def __init__(self, builder,workQueue):
         threading.Thread.__init__(self)
@@ -42,10 +45,13 @@ class UIThread(threading.Thread):
     def run(self):
         self.application.MainLoop()
 
+##FormUI
+##Used to build Form UI Application
 class FormUI():
     def __init__(self, builder):
         self.builder = builder
         self.returnState = False
+
     def show(self):
         queue = Queue.Queue(30)
         uiThread = UIThread(self.builder, queue)

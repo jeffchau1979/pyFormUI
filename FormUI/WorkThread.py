@@ -32,6 +32,7 @@ EVENT_WORKTHREAD_ITEM_SET_VALUE = 11
 EVENT_WORKTHREAD_SHOWFORM = 12
 EVENT_WORKTHREAD_MESSAGE = 13
 
+#The Work Thread Runnable
 def workThreadRunnable(workQueue):
         thread_stop = False
         returnState = False

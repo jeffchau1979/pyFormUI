@@ -20,6 +20,7 @@ def create(parent, builder, workQueue):
 
 [wxID_DIALOG1BUTTONOK, wxID_DIALOG1BUTTONCANCEL] = [wx.NewId() for _init_ctrls in range(2)]
 
+##Frame,The Window of application
 class Frame(wx.Frame,FormCtrl):
     WINDOW_STATE_INIT = 0
     WINDOW_STATE_WORK = 1
@@ -115,6 +116,16 @@ class Frame(wx.Frame,FormCtrl):
          self.showMainForm()
          self.windowState = self.WINDOW_STATE_WORK
 
+         #The accelerator will triger EVT_MENU event
+         for accelerator in self.windowControl.acceleratorTable:
+            self.Bind(wx.EVT_MENU, self.onAccelerator, id=accelerator[2])
+         acceltbl = wx.AcceleratorTable(self.windowControl.acceleratorTable)
+
+         self.SetAcceleratorTable(acceltbl)
+
+    def onAccelerator(self, event):
+        self.windowControl.OnItemEvent(event)
+
     def onsubFormExit(self, workThread):
         pass
 
@@ -125,6 +136,7 @@ class Frame(wx.Frame,FormCtrl):
             wx.GetApp().SetTopWindow(form)
             workThread.start()
 
+    #Call Form Handler,
     def CallFormHandler(self, id,eventType):
         if self.workQueue is not None:
             ctrlHandler = None
