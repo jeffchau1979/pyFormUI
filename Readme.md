@@ -13,7 +13,7 @@ Installation
 ```bash
   sudo apt-get install python-wxtools
 ```
-#### 2.Installation pyFormUI from the source package:
+#### 2.Download pyFormUI Source and Installation pyFormUI from the source package:
 ```bash
 python setup.py install
 ```
