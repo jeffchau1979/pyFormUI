@@ -18,7 +18,7 @@ global gControlTypeRegister
 gControlTypeRegister = {}
 
 ###########################
-##FormCtrol should implement the interfaces listed below:
+##FormCtrol should implement the interfaces listed as below:
 ##    def GetValue(self):
 ##    def SetValue(self,value):
 ##    def Enable(self,bEnable):

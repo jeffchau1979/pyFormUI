@@ -100,7 +100,7 @@ class FormControlUtil():
                 return align
         return 0
 
-#Form Control Base
+#Form Control Base Class
 class FormControlBase():
     def __init__(self,item,parent):
         self.item = item
