@@ -13,7 +13,6 @@ from FormControlBase import *
 import wx.lib.scrolledpanel as scrolled
 import wx.lib.filebrowsebutton
 
-
 global gControlTypeRegister
 gControlTypeRegister = {}
 
@@ -39,6 +38,24 @@ class Static(wx.StaticText, FormControlBase):
     def SetValue(self,value):
         pass
 gControlTypeRegister['static'] = Static
+
+class Image(wx.Panel, FormControlBase):
+    def __init__(self, item, parent, windowControl):
+        FormControlBase.__init__(self, item,parent)
+        para = FormControlUtil.makeCommonPara(item,parent)
+        wx.Panel.__init__(self,**para)
+        para['src'] = BuilderUtil.getItemValue(item, 'src')
+        png = wx.Image(BuilderUtil.modulePath()+os.path.sep +para['src'], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        if para['size'] is None or para['size']==(0,0):
+            para['size'] = (png.getWidth(),png.getHeight())
+        wx.StaticBitmap(self, -1, png,(0,0), para['size'])
+
+    def GetValue(self):
+        return None
+
+    def SetValue(self,value):
+        pass
+gControlTypeRegister['img'] = Image
 
 class Choise(wx.Choice, FormControlBase):
     def __init__(self, item, parent, windowControl):
@@ -193,7 +210,19 @@ class ComboBox(wx.ComboBox, FormControlBase):
         if FormControlUtil.conventBool(value):
             itemCtrl.SetValue(value)
         elif len(choices) > 0:
-            wx.ComboBox.SetValue(self,choices[0])
+            wx.ComboBox.SetValue(self,"")
+        windowControl.registItemHandler(self, para['id'],wx.EVT_COMBOBOX,'evt_combobox')
+        windowControl.registItemHandler(self, para['id'],wx.EVT_TEXT,'evt_text')
+        
+#     def GetValue(self):
+#         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(self.item, 'choices', []))
+#         return choices[wx.ComboBox.GetSelection(self)]
+#  
+#     def SetValue(self,value):
+#         choices = FormControlUtil.convertList(BuilderUtil.getItemValue(self.item, 'choices', []))
+#         index = choices.index(value)
+#         if index >= 0:
+#             wx.ComboBox.Select(self,index)    
 gControlTypeRegister['combo_box'] = ComboBox
 
 class Date(wx.DatePickerCtrl,FormControlBase):
@@ -336,12 +365,14 @@ class Table(FormControlBase,wx.ListCtrl):
         tableList = BuilderUtil.getItemValue(item, 'data', [])
         columnList = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'columns', []))
         columnWidthList = FormControlUtil.convertList(BuilderUtil.getItemValue(item, 'columns_width', []))
+        columnList[0:0] = ['No.']
+        columnWidthList[0:0] = ['50']
         columnIndex = 0
         for column in columnList:
             width = -1
             if columnIndex < len(columnWidthList):
                 width = int(columnWidthList[columnIndex])
-            self.InsertColumn(columnIndex, column, width=width)
+            self.InsertColumn(columnIndex, column,format=wx.LIST_FORMAT_CENTRE, width=width)
             columnIndex = columnIndex + 1
         item['indexMap'] = {}
         item['idMap'] = {}
@@ -351,9 +382,10 @@ class Table(FormControlBase,wx.ListCtrl):
                 item['idMap'][line['id']] = str(index)
                 lineItems = FormControlUtil.convertList(line['items'])
                 self.InsertStringItem(index, '')
+                self.SetStringItem(index, 0, str(line['id']))
                 columnIndex = 0
                 for lineitem in lineItems:
-                    self.SetStringItem(index, columnIndex, lineitem)
+                    self.SetStringItem(index, columnIndex+1, lineitem)
                     columnIndex = columnIndex + 1
         windowControl.registItemHandler(self, para['id'],wx.EVT_LIST_ITEM_SELECTED,'evt_list_item_selected')
         windowControl.registItemHandler(self, para['id'],wx.EVT_LIST_ITEM_DESELECTED,'evt_list_item_deselected')
@@ -369,7 +401,7 @@ class Table(FormControlBase,wx.ListCtrl):
     def SetValue(self,value):
         valueList = FormControlUtil.convertList(value)
         for value in valueList:
-            index = self.item['idMap'][str(value)]
+            index = self.item['idMap'][value]
             wx.ListCtrl.SetItemState(self,long(index), wx.LIST_STATE_SELECTED, wx.LIST_STATE_SELECTED)
 gControlTypeRegister['table'] = Table
 
